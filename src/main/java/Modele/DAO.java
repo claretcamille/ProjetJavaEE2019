@@ -3,8 +3,14 @@
  */
 package Modele;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import javax.activation.DataSource;
+import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlToolError;
 
 /**
  * @author camilleclaret
@@ -18,7 +24,17 @@ public class DAO {
      * @param DataSource est la base de données mise 
     */
     public DAO(DataSource DataSource){
-        this.myDao = DataSource;
+        this.myDao =  DataSource;
+    }
+    
+    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
+        
+        String sqlFilePath = DAO.class.getResource(filename).getFile();
+        SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
+        
+        sqlFile.setConnection(connexion);
+        sqlFile.execute();
+        sqlFile.closeReader();
     }
     
     /**
