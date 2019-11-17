@@ -29,7 +29,7 @@ public class DAOTest {
     private DAO myDAO; // L'objet à tester
     private javax.sql.DataSource myDataSource; // La source de données à utiliser
     private  Connection myConnection ; // La connection à la BD de test
-    private IDatabaseTester databaseTester;
+    
     
 
     @Before
