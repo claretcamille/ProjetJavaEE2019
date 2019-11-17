@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import javax.activation.DataSource;
+import javax.sql.DataSource;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 
@@ -19,6 +19,15 @@ public class DAO {
     
     private DataSource myDao;
     
+    
+      /**
+     * Constructeur de la classe
+     * @param DataSource est la base de données mise 
+    */
+    public DAO() throws SQLException{
+        this.myDao =  DataSourceFactory.getDataSource();
+    }
+    
     /**
      * Constructeur de la classe
      * @param DataSource est la base de données mise 
@@ -26,17 +35,7 @@ public class DAO {
     public DAO(DataSource DataSource){
         this.myDao =  DataSource;
     }
-    
-    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
-        
-        String sqlFilePath = DAO.class.getResource(filename).getFile();
-        SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
-        
-        sqlFile.setConnection(connexion);
-        sqlFile.execute();
-        sqlFile.closeReader();
-    }
-    
+
     /**
      * Permet de récupérer la base de donnée
      * @return la base de données utilisé.
