@@ -71,7 +71,7 @@ public class DAOTest {
         System.out.println("allProduct");
         DAO instance = null;
         List<String> expResult = null;
-        List<String> result = instance.allProduct();
+        List<Product> result = instance.allProduct();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -86,7 +86,7 @@ public class DAOTest {
         String category = "";
         DAO instance = null;
         List<String> expResult = null;
-        List<String> result = instance.categoryProduct(category);
+        List<Product> result = instance.categoryProduct(category);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
