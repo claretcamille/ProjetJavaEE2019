@@ -34,7 +34,12 @@ public class DAOTest {
 
     @Before
     public void setUp() throws SQLException, IOException, SqlToolError {
-        // On utilise la base de données de test
+        
+        
+        this.myDataSource = DataSourceFactory.getDataSource();
+        this.myDAO = new DAO(this.myDataSource);
+        /*
+         // On utilise la base de données de test
         this.myDataSource = getTestDataSource();
         this.myConnection = this.myDataSource.getConnection();
         
@@ -44,13 +49,13 @@ public class DAOTest {
         this.executeSQLScript(this.myConnection, "ComptoirInnoDB_Data.sql");
         
         this.myDAO = new DAO(this.myDataSource);
-
+        */
     }
     
     @After
     public void tearDown() throws SQLException {
         
-        this.myConnection.close(); // Fermeture de la connection
+        //this.myConnection.close(); // Fermeture de la connection
         
     }
 
@@ -69,12 +74,17 @@ public class DAOTest {
     @Test
     public void testAllProduct() {
         System.out.println("allProduct");
-        DAO instance = null;
-        List<String> expResult = null;
-        List<Product> result = instance.allProduct();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<Product> result = this.myDAO.allProduct();
+        Product expResult = new Product("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
+        // Premier test, on regarde que tout les produits sont présent
+        assertEquals(result.size(), 77);
+        // Deuxieme test on vérifie les données du premier produit
+        assertEquals(expResult.getRef(), result.get(0).getRef());
+        assertEquals(expResult.getNom(), result.get(0).getNom());
+        assertEquals(expResult.getFourni(), result.get(0).getFourni());
+        assertEquals(expResult.getQt(), result.get(0).getQt());
+        assertEquals(expResult.getRef(), result.get(0).getRef());
+        
     }
 
     /**
@@ -82,26 +92,38 @@ public class DAOTest {
      */
     @Test
     public void testCategoryProduct() {
-        System.out.println("categoryProduct");
-        String category = "";
-        DAO instance = null;
-        List<String> expResult = null;
-        List<Product> result = instance.categoryProduct(category);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String category = "Boissons";
+        Product expResult = new Product("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
+        List<Product> result = this.myDAO.categoryProduct(category);
+        // Vérification que la liste est de taille 12
+        assertEquals(result.size(), 12);
+        // Deuxieme test on vérifie les données du premier produit
+        assertEquals(expResult.getRef(), result.get(0).getRef());
+        assertEquals(expResult.getNom(), result.get(0).getNom());
+        assertEquals(expResult.getFourni(), result.get(0).getFourni());
+        assertEquals(expResult.getQt(), result.get(0).getQt());
+        assertEquals(expResult.getRef(), result.get(0).getRef());
     }
 
     /**
-     * Test of toConnect method, of class DAO.
+     * Test of getConnection() method, of class DAO.
      */
     @Test
-    public void testToConnect() {
+    public void testgetConnection() {
         System.out.println("toConnect");
-        DAO instance = null;
-        instance.toConnect();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        // test connection admin
+        this.myDAO.toConnect("admin", "admin");
+        assertEquals(this.myDAO.getConnection(), true);
+         // test connection admin
+        this.myDAO.toDisconnect();
+        assertEquals(this.myDAO.getConnection(), false);
+         // test connection admin
+        this.myDAO.toConnect("Maria Anders", "ALFKI");
+        assertEquals(this.myDAO.getConnection(), true);
+         // test connection admin
+        this.myDAO.toDisconnect();
+        assertEquals(this.myDAO.getConnection(), false);
     }
     
     public static javax.sql.DataSource getTestDataSource() {

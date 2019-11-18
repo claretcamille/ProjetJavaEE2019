@@ -74,4 +74,9 @@ public class Product {
     public String getPrix(){
         return this.prix;
     }
+    
+    public int size(){
+        return 5;
+    }
+    
 }
