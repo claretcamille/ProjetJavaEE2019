@@ -35,10 +35,10 @@ public class DAOTest {
     @Before
     public void setUp() throws SQLException, IOException, SqlToolError {
         
-        /*
+        
         this.myDataSource = DataSourceFactory.getDataSource();
         this.myDAO = new DAO(this.myDataSource);
-        */
+        /*
          // On utilise la base de données de test
         this.myDataSource = getTestDataSource();
         this.myConnection = this.myDataSource.getConnection();
@@ -49,13 +49,13 @@ public class DAOTest {
         this.executeSQLScript(this.myConnection, "comptoirs_data.sql");
         
         this.myDAO = new DAO(this.myDataSource);
-        
+        */
     }
     
     @After
     public void tearDown() throws SQLException {
         
-        this.myConnection.close(); // Fermeture de la connection
+       // this.myConnection.close(); // Fermeture de la connection
         
     }
 
