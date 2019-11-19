@@ -145,9 +145,9 @@ public class DAOAdmin {
        String sql1 ="SELECT   PRODUIT.CATEGORIE, PRODUIT.REFERENCE, LIGNE.QUANTITE , PRODUIT.PRIX_UNITAIRE  FROM LIGNE\n" +
                             "INNER JOIN  COMMANDE  ON LIGNE.COMMANDE = COMMANDE.NUMERO\n" +
                             "INNER JOIN PRODUIT ON LIGNE.PRODUIT = PRODUIT.REFERENCE\n" +
-                            "WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+                            "WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?  AND  PRODUIT.CATEGORIE = ?";
        
-       String sql2 = "SELECT COUNT(DISTINC code) FROM  CATEGORIE";
+       String sql2 = "SELECT COUNT(DISTINCT code) FROM  CATEGORIE";
        
        List<ChiffreAffEntity> result = new LinkedList<>();
        
@@ -161,13 +161,19 @@ public class DAOAdmin {
           for(int i = 1; i < rs1.getFetchDirection()+1; i++){
               String cat = Integer.toString(i);
               result.add(new ChiffreAffEntity(cat,0));
+              // Mise à jour du chiffre d'affaire
+             stmt2.setString(1, dateDebut);
+             stmt2.setString(2, dateFin);
+             stmt2.setInt(3, i);
+             ResultSet rs2 = stmt2.executeQuery();
+             while(rs2.next()){
+                  // mise à jour du chiffre d'affaire
+                  float qt = rs2.getFloat("quantite");
+                  float prix = rs2.getFloat("prix_unitaire");
+                  result.get(i-1).ajoutChiffre(qt*prix);
+            }
           }
-          // Mise à jour du chiffre d'affaire
-          ResultSet rs2 = stmt2.executeQuery();
-          while(rs2.next()){
-                // mise à jour du chiffre d'affaire
-                result.get(rs2.getInt("categorie")-1).ajoutChiffre(rs2.getFloat("prix_unitaire")*rs2.getFloat("quantite"));
-          }
+          
        }
         return result;
     }
@@ -179,9 +185,10 @@ public class DAOAdmin {
      * @return a liste du chiffre d'affaire par pays
      */
     public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin) throws SQLException{
-        String sql1 ="SELECT COMMANDE.PAYS_LIVRAISON , COMMANDE.PORT  FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+        String sql1 ="SELECT pays_livraison , port  FROM JAVAEE.COMMANDE"
+                + " WHERE saisie_le > ? AND  saisie_le < ? AND pays_livraison=?";
         
-        String sql2 = "SELECT (DISTINC pays) FROM CLIENT";
+        String sql2 = "SELECT DISTINCT pays FROM CLIENT";
         
         List<ChiffreAffEntity> result = new LinkedList<>();
         List<String>  pays = new LinkedList<>();
@@ -192,18 +199,24 @@ public class DAOAdmin {
               PreparedStatement stmt2 = myConnection.prepareStatement(sql1)  
          ){
             ResultSet rs1 = stmt1.executeQuery();
+            int index = 0;
            // Initialisation de la liste avec toute les catégorie
           while(rs1.next()){
               String info = rs1.getNString("pays");
               pays.add(info);
               result.add(new ChiffreAffEntity(info,0));
+             // Mise à jour du chiffre d'affaire
+             stmt2.setString(1, dateDebut);
+             stmt2.setString(2, dateFin);
+             stmt2.setString(3, info);
+              ResultSet rs2 = stmt2.executeQuery(); 
+              while(rs2.next()){
+                    // mise à jour du chiffre d'affaire
+                    result.get(index).ajoutChiffre(rs2.getFloat("port"));
+                }
+              index++;
           }
-          // Mise à jour du chiffre d'affaire
-          ResultSet rs2 = stmt2.executeQuery();
-          while(rs2.next()){
-                // mise à jour du chiffre d'affaire
-                result.get(pays.indexOf(rs2.getString("pays"))).ajoutChiffre(rs2.getFloat("port"));
-          }
+         
             
         }
         return result;
@@ -253,7 +266,7 @@ public class DAOAdmin {
      */
     public List<String> dateSelection() throws SQLException{
         List<String> result = new LinkedList<>();
-        String sql = "SELECT (DISTINC  saisie_le) FROM COMMANDE";
+        String sql = "SELECT DISTINCT SAISIE_LE FROM COMMANDE";
         try(
               Connection myConnection = this.myDAOAdmin.getConnection();
               PreparedStatement stmt = myConnection.prepareStatement(sql);
