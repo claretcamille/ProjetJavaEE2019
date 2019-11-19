@@ -75,8 +75,4 @@ public class ProductEntity {
         return this.prix;
     }
     
-    public int size(){
-        return 5;
-    }
-    
 }

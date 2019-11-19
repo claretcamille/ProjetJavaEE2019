@@ -139,29 +139,31 @@ public class DAOAdmin {
      * @param dateFin
      * @return la liste du chiffre d'affaire par catégorie
      */
-    public List<String> chiffreAffCat(String dateDebut, String dateFin){
+    public List<ChiffreAffEntity> chiffreAffCat(String dateDebut, String dateFin){
+       String sql ="SELECT  categorie, produit sum(quantite * prix_unitaire) JAVAEE.LIGNE"
+               + "INNER JOINT JAVAEE.COMMANDE numero = commande "
+               + "INNERJOINT JAVAEE.PRODUIT produit = reference"
+               + "WHERE date > ? and date < ? GROUPBY produit";
         return null;
     }
     
     /**
      * Fonction permettant d'avoir le chiffre d'affaire par pays  en une période choisie
-     * @param pays
      * @param dateDebut
      * @param dateFin
      * @return a liste du chiffre d'affaire par pays
      */
-    public List<String> chiffreAffPays(String pays, String dateDebut, String dateFin){
+    public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin){
         return null;
     }
     
     /**
      * Fonction permettant d'avoir le chiffre d'affaire par client en une période choisie
-     * @param categori
      * @param dateDebut
      * @param dateFin
      * @return a liste du chiffre d'affaire par client
      */
-    public List<String> chiffreAffClient (String categori, String dateDebut, String dateFin){
+    public List<ChiffreAffEntity> chiffreAffClient ( String dateDebut, String dateFin){
         return null;
     }
     
