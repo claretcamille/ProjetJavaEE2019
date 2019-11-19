@@ -39,6 +39,14 @@ public class ChiffreAffEntity{
     public float getChiffre(){
         return this.chiffre;
     }
+    
+    /**
+     * Fonction pour augmanter le chiffre
+     * @param chif 
+     */
+    public void ajoutChiffre(float chif){
+        this.chiffre += chif;
+    }
             
     
 }

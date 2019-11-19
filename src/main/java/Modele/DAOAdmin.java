@@ -4,10 +4,12 @@
 package Modele;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,12 +141,35 @@ public class DAOAdmin {
      * @param dateFin
      * @return la liste du chiffre d'affaire par catégorie
      */
-    public List<ChiffreAffEntity> chiffreAffCat(String dateDebut, String dateFin){
-       String sql ="SELECT  categorie, produit sum(quantite * prix_unitaire) JAVAEE.LIGNE"
-               + "INNER JOINT JAVAEE.COMMANDE numero = commande "
-               + "INNERJOINT JAVAEE.PRODUIT produit = reference"
-               + "WHERE date > ? and date < ? GROUPBY produit";
-        return null;
+    public List<ChiffreAffEntity> chiffreAffCat(String dateDebut, String dateFin) throws SQLException{
+       String sql1 ="SELECT   PRODUIT.CATEGORIE, PRODUIT.REFERENCE, LIGNE.QUANTITE , PRODUIT.PRIX_UNITAIRE  FROM LIGNE\n" +
+                            "INNER JOIN  COMMANDE  ON LIGNE.COMMANDE = COMMANDE.NUMERO\n" +
+                            "INNER JOIN PRODUIT ON LIGNE.PRODUIT = PRODUIT.REFERENCE\n" +
+                            "WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+       
+       String sql2 = "SELECT COUNT(DISTINC code) FROM  CATEGORIE";
+       
+       List<ChiffreAffEntity> result = new LinkedList<>();
+       
+       try(
+                 Connection myConnection = this.myDAOAdmin.getConnection();
+                 PreparedStatement stmt1 = myConnection.prepareStatement(sql2 )  ;
+                 PreparedStatement stmt2 = myConnection.prepareStatement(sql1)
+               ){
+           ResultSet rs1 = stmt1.executeQuery();
+           // Initialisation de la liste avec toute les catégorie
+          for(int i = 1; i < rs1.getFetchDirection()+1; i++){
+              String cat = Integer.toString(i);
+              result.add(new ChiffreAffEntity(cat,0));
+          }
+          // Mise à jour du chiffre d'affaire
+          ResultSet rs2 = stmt2.executeQuery();
+          while(rs2.next()){
+                // mise à jour du chiffre d'affaire
+                result.get(rs2.getInt("categorie")-1).ajoutChiffre(rs2.getFloat("prix_unitaire")*rs2.getFloat("quantite"));
+          }
+       }
+        return result;
     }
     
     /**
@@ -153,8 +178,35 @@ public class DAOAdmin {
      * @param dateFin
      * @return a liste du chiffre d'affaire par pays
      */
-    public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin){
-        return null;
+    public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin) throws SQLException{
+        String sql1 ="SELECT COMMANDE.PAYS_LIVRAISON , COMMANDE.PORT  FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+        
+        String sql2 = "SELECT (DISTINC pays) FROM CLIENT";
+        
+        List<ChiffreAffEntity> result = new LinkedList<>();
+        List<String>  pays = new LinkedList<>();
+        
+        try(
+              Connection myConnection = this.myDAOAdmin.getConnection();
+              PreparedStatement stmt1 = myConnection.prepareStatement(sql2 )  ;
+              PreparedStatement stmt2 = myConnection.prepareStatement(sql1)  
+         ){
+            ResultSet rs1 = stmt1.executeQuery();
+           // Initialisation de la liste avec toute les catégorie
+          while(rs1.next()){
+              String info = rs1.getNString("pays");
+              pays.add(info);
+              result.add(new ChiffreAffEntity(info,0));
+          }
+          // Mise à jour du chiffre d'affaire
+          ResultSet rs2 = stmt2.executeQuery();
+          while(rs2.next()){
+                // mise à jour du chiffre d'affaire
+                result.get(pays.indexOf(rs2.getString("pays"))).ajoutChiffre(rs2.getFloat("port"));
+          }
+            
+        }
+        return result;
     }
     
     /**
@@ -163,8 +215,55 @@ public class DAOAdmin {
      * @param dateFin
      * @return a liste du chiffre d'affaire par client
      */
-    public List<ChiffreAffEntity> chiffreAffClient ( String dateDebut, String dateFin){
-        return null;
+    public List<ChiffreAffEntity> chiffreAffClient ( String dateDebut, String dateFin) throws SQLException{
+        String sql1 =" COMMANDE.PORT  FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+        
+        String sql2 = "SELECT code FROM CLIENT";
+        
+        List<ChiffreAffEntity> result = new LinkedList<>();
+        List<String>  client = new LinkedList<>();
+        
+        try(
+              Connection myConnection = this.myDAOAdmin.getConnection();
+              PreparedStatement stmt1 = myConnection.prepareStatement(sql2 )  ;
+              PreparedStatement stmt2 = myConnection.prepareStatement(sql1)  
+         ){
+            ResultSet rs1 = stmt1.executeQuery();
+           // Initialisation de la liste avec toute les catégorie
+          while(rs1.next()){
+              String info = rs1.getNString("code");
+              client.add(info);
+              result.add(new ChiffreAffEntity(info,0));
+          }
+          // Mise à jour du chiffre d'affaire
+          ResultSet rs2 = stmt2.executeQuery();
+          while(rs2.next()){
+                // mise à jour du chiffre d'affaire
+                result.get(client.indexOf(rs2.getString("client"))).ajoutChiffre(rs2.getFloat("port"));
+          }
+            
+        }
+        return result;
+    }
+    
+    /**
+     * Fonction donnant la liste des dates possible
+     * @return liste de date
+     * @throws SQLException 
+     */
+    public List<String> dateSelection() throws SQLException{
+        List<String> result = new LinkedList<>();
+        String sql = "SELECT (DISTINC  saisie_le) FROM COMMANDE";
+        try(
+              Connection myConnection = this.myDAOAdmin.getConnection();
+              PreparedStatement stmt = myConnection.prepareStatement(sql);
+              ResultSet rs = stmt.executeQuery();
+        ){
+            while(rs.next()){
+                result.add( rs.getDate(1).toString());
+            }
+        }
+        return result;
     }
     
 }
