@@ -62,8 +62,8 @@ public class DAO {
      * Fonction qui retourne la liste de tous les produit
      * @return la liste de tous les produits
      */
-    public List<Product> allProduct() {
-        List<Product> result = new LinkedList<>();
+    public List<ProductEntity> allProduct() {
+        List<ProductEntity> result = new LinkedList<>();
         String sql = "SELECT * FROM JAVAEE.PRODUIT ";
         try(
                 Connection myConnection = this.myDao.getConnection();
@@ -82,7 +82,7 @@ public class DAO {
                 // Récupération de la catégorie
                 int catProd = rs.getInt("categorie");
                 // Implémentation du produit
-                Product prod = new Product(
+                ProductEntity prod = new ProductEntity(
                         donnees.get(0),// ref du produit
                         donnees.get(1), // nom du produit
                         donnees.get(2),// fournisseur du produit
@@ -105,9 +105,9 @@ public class DAO {
      * @param category est la catégorie d'article
      * @return la liste des articles appartenant a la categorie selectionner
      */
-    public List<Product> categoryProduct(String category){
+    public List<ProductEntity> categoryProduct(String category){
         
-        List<Product> result = new LinkedList<>();
+        List<ProductEntity> result = new LinkedList<>();
         // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
         String sql1 = "SELECT * FROM JAVAEE.CATEGORIE WHERE libelle =?";
         String sql2  = "SELECT * FROM JAVAEE.PRODUIT  WHERE  categorie =  ?";
@@ -137,7 +137,7 @@ public class DAO {
                         // Récupération de la catégorie
                         int catProd = rs2.getInt("categorie");
                         // Implémentation du produit
-                        Product prod = new Product(
+                        ProductEntity prod = new ProductEntity(
                                 donnees.get(0),// ref du produit
                                 donnees.get(1), // nom du produit
                                 donnees.get(2),// fournisseur du produit

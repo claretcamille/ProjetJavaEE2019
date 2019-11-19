@@ -9,7 +9,7 @@ package Modele;
  *
  * @author camilleclaret
  */
-public class Product {
+public class ProductEntity {
     
     private String ref;
     private String nom;
@@ -18,7 +18,7 @@ public class Product {
     private String quantite;
     private String prix;
     
-    public Product(String refProd,String nomProd, String fourniProd, int catProd, String qtProd, String prixProd){
+    public ProductEntity(String refProd,String nomProd, String fourniProd, int catProd, String qtProd, String prixProd){
         this.ref = refProd;
         this.nom = nomProd;
         this.fournisseur = fourniProd;

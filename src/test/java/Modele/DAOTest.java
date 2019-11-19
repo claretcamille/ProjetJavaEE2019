@@ -35,27 +35,27 @@ public class DAOTest {
     @Before
     public void setUp() throws SQLException, IOException, SqlToolError {
         
-        
+        /*
         this.myDataSource = DataSourceFactory.getDataSource();
         this.myDAO = new DAO(this.myDataSource);
-        /*
+        */
          // On utilise la base de données de test
         this.myDataSource = getTestDataSource();
         this.myConnection = this.myDataSource.getConnection();
         
         // On crée le schema de la base de test
-        this.executeSQLScript(this.myConnection, "ComptoirInnoDB_Schema.sql");
+        this.executeSQLScript(this.myConnection, "comptoirs_schema_derby.sql");
         // On y met des données
-        this.executeSQLScript(this.myConnection, "ComptoirInnoDB_Data.sql");
+        this.executeSQLScript(this.myConnection, "comptoirs_data.sql");
         
         this.myDAO = new DAO(this.myDataSource);
-        */
+        
     }
     
     @After
     public void tearDown() throws SQLException {
         
-        //this.myConnection.close(); // Fermeture de la connection
+        this.myConnection.close(); // Fermeture de la connection
         
     }
 
@@ -74,8 +74,8 @@ public class DAOTest {
     @Test
     public void testAllProduct() {
         System.out.println("allProduct");
-        List<Product> result = this.myDAO.allProduct();
-        Product expResult = new Product("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
+        List<ProductEntity> result = this.myDAO.allProduct();
+        ProductEntity expResult = new ProductEntity("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
         // Premier test, on regarde que tout les produits sont présent
         assertEquals(result.size(), 77);
         // Deuxieme test on vérifie les données du premier produit
@@ -94,8 +94,8 @@ public class DAOTest {
     public void testCategoryProduct() {
         
         String category = "Boissons";
-        Product expResult = new Product("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
-        List<Product> result = this.myDAO.categoryProduct(category);
+        ProductEntity expResult = new ProductEntity("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
+        List<ProductEntity> result = this.myDAO.categoryProduct(category);
         // Vérification que la liste est de taille 12
         assertEquals(result.size(), 12);
         // Deuxieme test on vérifie les données du premier produit
