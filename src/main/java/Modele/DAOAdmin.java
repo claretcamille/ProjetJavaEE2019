@@ -185,8 +185,7 @@ public class DAOAdmin {
      * @return a liste du chiffre d'affaire par pays
      */
     public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin) throws SQLException{
-        String sql1 ="SELECT pays_livraison , port  FROM JAVAEE.COMMANDE"
-                + " WHERE saisie_le > ? AND  saisie_le < ? AND pays_livraison=?";
+        String sql1 ="SELECT  port  FROM COMMANDE WHERE saisie_le > ? AND  saisie_le < ?  AND pays_livraison= ?";
         
         String sql2 = "SELECT DISTINCT pays FROM CLIENT";
         
@@ -209,12 +208,11 @@ public class DAOAdmin {
              stmt2.setString(1, dateDebut);
              stmt2.setString(2, dateFin);
              stmt2.setString(3, info);
-              ResultSet rs2 = stmt2.executeQuery(); 
-              while(rs2.next()){
-                    // mise à jour du chiffre d'affaire
-                    result.get(index).ajoutChiffre(rs2.getFloat("port"));
-                }
-              index++;
+             ResultSet rs2 = stmt2.executeQuery(); 
+             while(rs2.next()){
+                 result.get(index).ajoutChiffre(rs2.getFloat("port"));
+             }
+             index++;
           }
          
             
@@ -229,7 +227,7 @@ public class DAOAdmin {
      * @return a liste du chiffre d'affaire par client
      */
     public List<ChiffreAffEntity> chiffreAffClient ( String dateDebut, String dateFin) throws SQLException{
-        String sql1 =" COMMANDE.PORT  FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?";
+        String sql1 =" SELECT port FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ? AND client = ?";
         
         String sql2 = "SELECT code FROM CLIENT";
         
@@ -242,18 +240,23 @@ public class DAOAdmin {
               PreparedStatement stmt2 = myConnection.prepareStatement(sql1)  
          ){
             ResultSet rs1 = stmt1.executeQuery();
+            String info = null;
+            int index = 0;
            // Initialisation de la liste avec toute les catégorie
           while(rs1.next()){
-              String info = rs1.getNString("code");
+              info = rs1.getNString("code");
               client.add(info);
               result.add(new ChiffreAffEntity(info,0));
           }
           // Mise à jour du chiffre d'affaire
+          stmt2.setString(1, dateDebut);
+          stmt2.setString(2, dateFin);
+          stmt2.setString(3, info);
           ResultSet rs2 = stmt2.executeQuery();
           while(rs2.next()){
-                // mise à jour du chiffre d'affaire
-                result.get(client.indexOf(rs2.getString("client"))).ajoutChiffre(rs2.getFloat("port"));
-          }
+                 result.get(index).ajoutChiffre(rs2.getFloat("port"));
+            }
+          index++;
             
         }
         return result;

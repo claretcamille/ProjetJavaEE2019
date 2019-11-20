@@ -5,8 +5,14 @@
  */
 package Modele;
 
+import static Modele.DAOTest.getTestDataSource;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlToolError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,17 +23,30 @@ import static org.junit.Assert.*;
  * @author camilleclaret
  */
 public class DAOAdminTest {
-    private  DAO myDAO;
-    private  DAOAdmin myDAOAdmin;
+    
+    private DAO myDAO;
+    private DAOAdmin myDAOAdmin; // L'objet à tester
+    private javax.sql.DataSource myDataSource; // La source de données à utiliser
+    private  Connection myConnection ; // La connection à la BD de test
     
     @Before
-    public void setUp() throws SQLException {
-        this.myDAO = new DAO();
+    public void setUp() throws SQLException, IOException, SqlToolError {
+        // On utilise la base de données de test
+        this.myDataSource = getTestDataSource();
+        this.myConnection = this.myDataSource.getConnection();
+        
+        // On crée le schema de la base de test
+        this.executeSQLScript(this.myConnection, "comptoirs_schema_derby.sql");
+        // On y met des données
+        this.executeSQLScript(this.myConnection, "comptoirs_data.sql");
+        
+        this.myDAO= new DAO(this.myDataSource);
         this.myDAOAdmin = new DAOAdmin(this.myDAO);
     }
     
     @After
-    public void tearDown() {
+    public void tearDown() throws SQLException {
+        this.myConnection.close(); // Fermeture de la connection
     }
 
     // Blocage de test : Pas de fichier compatible avec hdbsq
@@ -90,33 +109,39 @@ public class DAOAdminTest {
 
     /**
      * Test of chiffreAffPays method, of class DAOAdmin.
-     
+     */
     @Test
     public void testChiffreAffPays() throws Exception {
         System.out.println("chiffreAffPays");
         String dateDebut = "1994-08-04";
         String dateFin = "1994-10-04";
-        ChiffreAffEntity expResult = new ChiffreAffEntity("1", 52892.0F);
-        List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffClient(dateDebut, dateFin);        
-        assertEquals(expResult.getInfo(), result.get(0).getInfo());
-        assertEquals(expResult.getChiffre(), result.get(0).getChiffre());
+        ChiffreAffEntity expResult = new ChiffreAffEntity("Allemagne", 4424.0F);
+        List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffPays(dateDebut, dateFin);   
+        System.out.print(result.get(0).getChiffre());
+        if(expResult.getChiffre() ==  result.get(0).getChiffre()){
+            assertEquals(expResult.getInfo(), result.get(0).getInfo());
+        } else {
+            assertEquals(false, true);
+        } 
     }
-*/
     /**
      * Test of chiffreAffClient method, of class DAOAdmin.
-     
+      */
     @Test
     public void testChiffreAffClient() throws Exception {
         System.out.println("chiffreAffClient");
         String dateDebut = "1994-08-04";
         String dateFin = "1994-10-04";
-        ChiffreAffEntity expResult = new ChiffreAffEntity("1", (float) 52892.0);
+        ChiffreAffEntity expResult = new ChiffreAffEntity("ALFKI", 0F);
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffClient(dateDebut, dateFin);
-        assertEquals(expResult.getChiffre(), result.get(0).getChiffre());
-        assertEquals(expResult.getInfo(), result.get(0).getInfo());
-       
+        System.out.println(result.get(0).getChiffre());
+        if(expResult.getChiffre() ==  result.get(0).getChiffre()){
+            assertEquals(expResult.getInfo(), result.get(0).getInfo());
+        } else {
+            assertEquals(false, true);
+        } 
     }
-      */
+     
 
     /**
      * Test of dateSelection method, of class DAOAdmin.
@@ -124,10 +149,31 @@ public class DAOAdminTest {
     @Test
     public void testDateSelection() throws Exception {
         System.out.println("dateSelection");
-        String expResult = "1994-11-10";
+        String expResult = "1994-08-04";
         List<String> result = this.myDAOAdmin.dateSelection();
         assertEquals(expResult, result.get(0));
         
+    }
+    
+    
+    public static javax.sql.DataSource getTestDataSource() {
+        org.hsqldb.jdbc.JDBCDataSource ds = new org.hsqldb.jdbc.JDBCDataSource();
+        ds.setDatabase("jdbc:hsqldb:mem:testcase;shutdown=true");
+        ds.setUser("sa");
+        ds.setPassword("sa");
+        return ds;
+    }
+    
+    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
+        
+        String sqlFilePath = DAOTest.class.getResource(filename).getFile();
+        
+        SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
+        
+        sqlFile.setConnection(connexion);
+        sqlFile.execute();
+        sqlFile.closeReader();
+    
     }
     
 }

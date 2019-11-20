@@ -64,7 +64,7 @@ public class DAO {
      */
     public List<ProductEntity> allProduct() {
         List<ProductEntity> result = new LinkedList<>();
-        String sql = "SELECT * FROM JAVAEE.PRODUIT ";
+        String sql = "SELECT * FROM PRODUIT ";
         try(
                 Connection myConnection = this.myDao.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql);
@@ -109,8 +109,8 @@ public class DAO {
         
         List<ProductEntity> result = new LinkedList<>();
         // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
-        String sql1 = "SELECT * FROM JAVAEE.CATEGORIE WHERE libelle =?";
-        String sql2  = "SELECT * FROM JAVAEE.PRODUIT  WHERE  categorie =  ?";
+        String sql1 = "SELECT * FROM CATEGORIE WHERE libelle =?";
+        String sql2  = "SELECT * FROM PRODUIT  WHERE  categorie =  ?";
          try(   
                  Connection myConnection = this.myDao.getConnection();
                  PreparedStatement stmt1 = myConnection.prepareStatement(sql1);
@@ -164,7 +164,7 @@ public class DAO {
      */
     public void toConnect(String user, String pw){
         boolean result = false;
-        String sql = "SELECT * FROM JAVAEE.CLIENT Where contact = ?";
+        String sql = "SELECT * FROM CLIENT Where contact = ?";
         try(
                 Connection myConnection = this.myDao.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql);
