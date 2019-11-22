@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 public class DAOAdmin {
     
     private final DataSource myDAOAdmin;
+    private DAO dao;
     
     /**
      * Constructeur de la classe
@@ -29,6 +30,11 @@ public class DAOAdmin {
      */
     public DAOAdmin(DAO myDAO){
         this.myDAOAdmin = myDAO.getDAO();// récupération de la base générale
+        dao = myDAO;
+    }
+    
+    public DAO getDAO(){
+        return this.dao;
     }
     
     /**
@@ -39,7 +45,8 @@ public class DAOAdmin {
      */
     public void addProduct(ProductEntity info, List<Integer> infoAdmin ) throws SQLException{
         
-        String sql = "INSERT INTO  JAVAEE.PRODUIT  VALUES(?,?,?,?,?,?,?,?,?,?)"; 
+        String sql = "INSERT INTO  PRODUIT(nom,fournisseur,categorie,quantite_par_unite,prix_unitaire,unites_en_stock, unites_commandees,niveau_de_reappro,indisponible)  "
+                + "VALUES(?,?,?,?,?,?,?,?,?)"; 
         
         try(
                 Connection myConnection = this.myDAOAdmin.getConnection();
@@ -48,21 +55,22 @@ public class DAOAdmin {
             // On démarre la transaction
             myConnection.setAutoCommit(false);
             try{
+
+                //Ajout des infos;
+                
+                stmt.setString(1, info.getNom());
+                stmt.setString(2, info.getFourni());
+                stmt.setInt(3, info.getCat());
+                stmt.setString(4, info.getQt());
+                stmt.setString(5, info.getPrix());
+                stmt.setInt(6,infoAdmin.get(0) );
+                stmt.setInt(7, infoAdmin.get(1));
+                stmt.setInt(8, infoAdmin.get(2));
+                stmt.setInt(9, infoAdmin.get(3));
                 
                 // Création du produit
-                stmt.executeQuery();
+                stmt.executeUpdate();
                 
-                //Ajout des infos;
-                stmt.setString(2, info.getNom());
-                stmt.setString(3, info.getFourni());
-                stmt.setInt(4, info.getCat());
-                stmt.setString(5, info.getQt());
-                stmt.setString(6, info.getPrix());
-                stmt.setInt(7,infoAdmin.get(0) );
-                stmt.setInt(8, infoAdmin.get(1));
-                stmt.setInt(9, infoAdmin.get(2));
-                stmt.setInt(10, infoAdmin.get(3));
-       
                 myConnection.commit(); // Validation de la transaction
                 
             }catch (SQLException ex) {
@@ -81,25 +89,14 @@ public class DAOAdmin {
      */
     public void suppProduct(int reference) throws SQLException {
         
-        String sql = "DELETE FROM  JAVAEE.PRODUIT  WHERE reference = ? ";
+        String sql = "DELETE FROM  PRODUIT  WHERE reference = " + reference;
         try(
                 Connection myConnection = this.myDAOAdmin.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql )             
         ){
-           try{
-                // On démarre la transaction
-                myConnection.setAutoCommit(false);
-                stmt.setInt(1, reference);
-                // Execution de la commande 
-                stmt.executeQuery();     
-           
-            }catch (SQLException ex) {
-                    Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-                     myConnection.rollback(); // On annule la transaction
-            }finally{
-                    myConnection.setAutoCommit(true); // On revient au mode de fonctionnement sans transaction
-            }
-            myConnection.commit();
+            myConnection.setAutoCommit(false);
+            stmt.executeUpdate();
+            myConnection.setAutoCommit(true);
         }
         
     }
@@ -112,28 +109,19 @@ public class DAOAdmin {
      */
     public void modifProduct(int reference, String choixModif, String modifProd) throws SQLException{
         
-        String sql = "UPDATE  JAVAEE.PRODUIT SET "+choixModif +" = "+modifProd+" WHERE reference = ?";
+        String sql = "UPDATE PRODUIT SET "+choixModif+" = '"+modifProd+"' WHERE reference = "+reference;
+        
         try(
                 Connection myConnection = this.myDAOAdmin.getConnection();
-                PreparedStatement stmt = myConnection.prepareStatement(sql )             
-        ){
+                PreparedStatement stmt = myConnection.prepareStatement(sql)
+                ){ 
+            myConnection.setAutoCommit(false);
+            stmt.executeUpdate();
+            myConnection.setAutoCommit(true);
             
-            try{
-                // On démarre la transaction
-                myConnection.setAutoCommit(false);
-                stmt.setInt(1, reference);
-                // Execution de la commande 
-                stmt.executeQuery();     
-           
-            }catch (SQLException ex) {
-                    Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-                     myConnection.rollback(); // On annule la transaction
-            }finally{
-                    myConnection.setAutoCommit(true); // On revient au mode de fonctionnement sans transaction
-            }
-             myConnection.commit();     
-        } 
-        
+            // Ici pas de rollBack() car une requête donc si elle marche pas aucun impact
+            
+        }
     }
     /**
      * Fonction permettant d'avoir le chiffre d'affaire par categorie de produit en une période choisie
@@ -247,17 +235,17 @@ public class DAOAdmin {
               info = rs1.getNString("code");
               client.add(info);
               result.add(new ChiffreAffEntity(info,0));
-          }
-          // Mise à jour du chiffre d'affaire
-          stmt2.setString(1, dateDebut);
-          stmt2.setString(2, dateFin);
-          stmt2.setString(3, info);
-          ResultSet rs2 = stmt2.executeQuery();
-          while(rs2.next()){
-                 result.get(index).ajoutChiffre(rs2.getFloat("port"));
-            }
-          index++;
-            
+          
+              // Mise à jour du chiffre d'affaire
+              stmt2.setString(1, dateDebut);
+              stmt2.setString(2, dateFin);
+              stmt2.setString(3, info);
+              ResultSet rs2 = stmt2.executeQuery();
+              while(rs2.next()){
+                     result.get(index).ajoutChiffre(rs2.getFloat("port"));
+              }
+              index++;
+           } 
         }
         return result;
     }

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
@@ -53,46 +54,60 @@ public class DAOAdminTest {
     
     /**
      * Test of addProduct method, of class DAOAdmin.
-     
+     */
     @Test
     public void testAddProduct() throws Exception {
         System.out.println("addProduct");
-        ProductEntity info = null;
-        List<Integer> infoAdmin = null;
-        DAOAdmin instance = null;
+        ProductEntity info = new ProductEntity("78","coca","1",1,"6 cannettes","3.99");;
+        List<Integer> infoAdmin = new LinkedList<>();
+        infoAdmin.add(20);
+        infoAdmin.add(1);
+        infoAdmin.add(2);
+        infoAdmin.add(0);
+        DAOAdmin instance = this.myDAOAdmin;
         instance.addProduct(info, infoAdmin);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<ProductEntity> result = instance.getDAO().allProduct();
+        // Premier test de la taille, + 1 produit
+        assertEquals(78, result.size());
+        // Deuxieme test on vérifie les données du premier produit
+        assertEquals(info.getRef(), result.get(result.size()-1).getRef());
+        assertEquals(info.getNom(), result.get(result.size()-1).getNom());
+        assertEquals(info.getFourni(), result.get(result.size()-1).getFourni());
+        assertEquals(info.getQt(), result.get(result.size()-1).getQt());
+        assertEquals(info.getRef(), result.get(result.size()-1).getRef());
     }
-    */
+   
     /**
      * Test of suppProduct method, of class DAOAdmin.
      
     @Test
     public void testSuppProduct() throws Exception {
         System.out.println("suppProduct");
-        int reference = 0;
-        DAOAdmin instance = null;
+        int reference = 1;
+        DAOAdmin instance = this.myDAOAdmin;
         instance.suppProduct(reference);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<ProductEntity> result = instance.getDAO().allProduct();
+       assertEquals(76, result.size()); // vérif qu'il manque un produit
+       
     }
-    */
+   */
     /**
      * Test of modifProduct method, of class DAOAdmin.
-     
+     */
     @Test
     public void testModifProduct() throws Exception {
         System.out.println("modifProduct");
-        int reference = 0;
-        String choixModif = "";
-        String modifProd = "";
-        DAOAdmin instance = null;
+        int reference = 1;
+        String choixModif = "quantite_par_unite";
+        String modifProd = "coca";
+        DAOAdmin instance = this.myDAOAdmin;
         instance.modifProduct(reference, choixModif, modifProd);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ProductEntity expResult = new ProductEntity("1","Chai","1",1,"coca","90.00");
+        List<ProductEntity> result = instance.getDAO().allProduct();
+        assertEquals(expResult.getQt(), result.get(0).getQt());
+        
     }
-    */
+    
     /**
      * Test of chiffreAffCat method, of class DAOAdmin.
      */
@@ -117,12 +132,10 @@ public class DAOAdminTest {
         String dateFin = "1994-10-04";
         ChiffreAffEntity expResult = new ChiffreAffEntity("Allemagne", 4424.0F);
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffPays(dateDebut, dateFin);   
-        System.out.print(result.get(0).getChiffre());
         if(expResult.getChiffre() ==  result.get(0).getChiffre()){
-            assertEquals(expResult.getInfo(), result.get(0).getInfo());
-        } else {
-            assertEquals(false, true);
+            assertEquals(expResult.getInfo(), result.get(0).getInfo()); // Vérif info
         } 
+        assertEquals(21,result.size()); // Férification de la taille de la liste
     }
     /**
      * Test of chiffreAffClient method, of class DAOAdmin.
@@ -137,9 +150,8 @@ public class DAOAdminTest {
         System.out.println(result.get(0).getChiffre());
         if(expResult.getChiffre() ==  result.get(0).getChiffre()){
             assertEquals(expResult.getInfo(), result.get(0).getInfo());
-        } else {
-            assertEquals(false, true);
         } 
+        assertEquals(91, result.size());
     }
      
 
@@ -152,6 +164,7 @@ public class DAOAdminTest {
         String expResult = "1994-08-04";
         List<String> result = this.myDAOAdmin.dateSelection();
         assertEquals(expResult, result.get(0));
+        assertEquals(480, result.size());
         
     }
     

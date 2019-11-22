@@ -99,6 +99,27 @@ public class DAO {
         }
         return result;
     }
+    /**
+     * Fonction permettant la récupération des catégories
+     * @return la liste des code et libelle de la table categorie
+     * @throws java.sql.SQLException
+     */
+    public List<CategorieEntity> getCategorie() throws SQLException{
+        List<CategorieEntity> result = new LinkedList<>();
+        String sql ="SELECT * FROM CATEGORIE";
+         try(
+                Connection myConnection = this.myDao.getConnection();
+                PreparedStatement stmt = myConnection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+         ){
+             while(rs.next()){
+                 int code = rs.getInt("code");
+                 String libelle = rs.getString("libelle");
+                 result.add(new CategorieEntity(code, libelle));
+             }
+         }        
+        return result;
+    }
     
     /**
      * Fonction cherchant les produits correspondant a une catégorie selectionner

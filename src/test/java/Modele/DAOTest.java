@@ -86,6 +86,22 @@ public class DAOTest {
         assertEquals(expResult.getRef(), result.get(0).getRef());
         
     }
+    
+     /**
+     * Test of categoryProduct method, of class DAO.
+     */
+    @Test
+    public void testgetCatedorie() throws SQLException {
+        System.out.println("allProduct");
+        List<CategorieEntity> result = this.myDAO.getCategorie();
+        CategorieEntity expResult = new CategorieEntity(1, "Boissons");
+        // Premier test, on regarde que tout les produits sont présent
+       assertEquals(result.size(), 8);
+        // Deuxieme test on vérifie les données du premier produit
+       assertEquals(expResult.getLibelle(), result.get(0).getLibelle());
+       assertEquals(expResult.getCode(), result.get(0).getCode());
+    
+    }
 
     /**
      * Test of categoryProduct method, of class DAO.
