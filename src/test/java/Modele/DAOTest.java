@@ -77,7 +77,7 @@ public class DAOTest {
         List<ProductEntity> result = this.myDAO.allProduct();
         ProductEntity expResult = new ProductEntity("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
         // Premier test, on regarde que tout les produits sont présent
-        assertEquals(result.size(), 77);
+        assertEquals(result.size(), 69);
         // Deuxieme test on vérifie les données du premier produit
         assertEquals(expResult.getRef(), result.get(0).getRef());
         assertEquals(expResult.getNom(), result.get(0).getNom());

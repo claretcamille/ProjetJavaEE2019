@@ -64,7 +64,7 @@ public class DAO {
      */
     public List<ProductEntity> allProduct() {
         List<ProductEntity> result = new LinkedList<>();
-        String sql = "SELECT * FROM PRODUIT ";
+        String sql = "SELECT * FROM PRODUIT WHERE indisponible = 0 ";
         try(
                 Connection myConnection = this.myDao.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql);

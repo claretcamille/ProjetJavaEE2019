@@ -88,8 +88,9 @@ public class DAOAdmin {
      * @param reference la référence du produit a supprimer
      */
     public void suppProduct(int reference) throws SQLException {
-        
-        String sql = "DELETE FROM  PRODUIT  WHERE reference = " + reference;
+        // ici on ne peut pas supprimer directement le produit de la table
+        // car sinon on doit supprimer les commandes ou le produit apparaît, on le passe donc en indisponible
+        String sql = "UPDATE PRODUIT SET indisponible = 1  WHERE reference = " + reference;
         try(
                 Connection myConnection = this.myDAOAdmin.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql )             

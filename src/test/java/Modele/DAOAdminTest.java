@@ -68,7 +68,7 @@ public class DAOAdminTest {
         instance.addProduct(info, infoAdmin);
         List<ProductEntity> result = instance.getDAO().allProduct();
         // Premier test de la taille, + 1 produit
-        assertEquals(78, result.size());
+        assertEquals(70, result.size());
         // Deuxieme test on vérifie les données du premier produit
         assertEquals(info.getRef(), result.get(result.size()-1).getRef());
         assertEquals(info.getNom(), result.get(result.size()-1).getNom());
@@ -79,7 +79,7 @@ public class DAOAdminTest {
    
     /**
      * Test of suppProduct method, of class DAOAdmin.
-     
+     */
     @Test
     public void testSuppProduct() throws Exception {
         System.out.println("suppProduct");
@@ -87,10 +87,10 @@ public class DAOAdminTest {
         DAOAdmin instance = this.myDAOAdmin;
         instance.suppProduct(reference);
         List<ProductEntity> result = instance.getDAO().allProduct();
-       assertEquals(76, result.size()); // vérif qu'il manque un produit
+       assertEquals(68, result.size()); // vérif qu'il manque un produit
        
     }
-   */
+   
     /**
      * Test of modifProduct method, of class DAOAdmin.
      */
