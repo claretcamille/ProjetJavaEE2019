@@ -10,5 +10,21 @@ package Modele;
  * @author camilleclaret
  */
 public class LigneEntity {
+    private int commande ;
+    private int product;
+    private int quantite;
+    
+    public LigneEntity( int refProd, int qt){
+        this.product = refProd;
+        this.quantite = qt;
+    }
+    
+    public int getProduct(){
+        return this.product;
+    }
+    
+    public int getQuantite(){
+        return this.quantite;
+    }
     
 }

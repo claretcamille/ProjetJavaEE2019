@@ -24,6 +24,7 @@ public class DAO {
     
     private DataSource myDao;
     private boolean connectionSite;
+    private String client ;
     
     
       /**
@@ -178,6 +179,10 @@ public class DAO {
         return result;
     }
     
+    public String getClient(){
+        return this.client;
+    }
+    
     /**
      * Fonction permettant la connection en administateur ou non.
      * @param user
@@ -194,6 +199,7 @@ public class DAO {
            try( ResultSet rs = stmt.executeQuery()){
                if(rs.next()){
                    String mdp = rs.getString("code");
+                   this.client = mdp;
                    result = pw.equals(mdp);
                }
            }
@@ -207,5 +213,6 @@ public class DAO {
     
      public void toDisconnect(){
          this.connectionSite = false;
+         this.client = null;
      }
 }
