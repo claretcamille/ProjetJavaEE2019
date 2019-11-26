@@ -117,7 +117,7 @@ public class DAOClientTest {
  
     /**
      * Test of addLineCommand method, of class DAOClient.
-    */
+    
     @Test
     public void testAddLineCommand() throws Exception {
         System.out.println("addLineCommand");
@@ -136,7 +136,7 @@ public class DAOClientTest {
        // vérif mise a jour du port
        assertEquals(119,result.getPort());  
     }
-    
+    */
     /**
      * Test of modifLineCommand method, of class DAOClient.
      
