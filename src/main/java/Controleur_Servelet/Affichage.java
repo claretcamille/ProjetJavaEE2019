@@ -49,7 +49,7 @@ public class Affichage extends HttpServlet {
         request.setAttribute("ProduitsInCategories", ProduitsInCategories);
         request.setAttribute("Categories",dao.getCategorie());
         request.setAttribute("CatSelect",LibelCat);
-        request.getRequestDispatcher("index").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

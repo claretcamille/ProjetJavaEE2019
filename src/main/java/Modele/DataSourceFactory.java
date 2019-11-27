@@ -27,7 +27,7 @@ public class DataSourceFactory {
         DataSource result;
         
         switch (TYPE) {
-            case server: // Derby mode serveur, doit être démarré indépendamment   
+            case embedded: // Derby mode serveur, doit être démarré indépendamment   
                 org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
                 ds.setDatabaseName("projetJavaEE");
                 ds.setUser("javaEE");
