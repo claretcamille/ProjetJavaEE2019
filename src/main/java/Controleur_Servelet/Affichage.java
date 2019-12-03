@@ -17,6 +17,7 @@ import Modele.DAO;
 import Modele.DataSourceFactory;
 import Modele.ProductEntity;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,14 +40,25 @@ public class Affichage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource()); 
-        String LibelCat = request.getParameter("categories");
+        String LibelCat = (String) request.getParameter("categories");
         if(LibelCat == null)
         {
             LibelCat=dao.getCategorie().get(0).getLibelle();
         }
         
         List<ProductEntity> ProduitsInCategories = dao.categoryProduct(LibelCat);
-        request.setAttribute("ProduitsInCategories", ProduitsInCategories);
+/*        List<Integer> Ref = new LinkedList<Integer>();
+        List<String> Nom = new LinkedList<String>();
+        List<String> Four = new LinkedList<String>();
+        for(int i=0;i<ProduitsInCategories.size();i++){ Ref.add(Integer.parseInt(ProduitsInCategories.get(i).getRef()));
+        Four.add(ProduitsInCategories.get(i).getFourni());
+        Nom.add(ProduitsInCategories.get(i).getNom());}
+
+        request.setAttribute("Ref", Ref);
+        request.setAttribute("Nom", Nom);
+        request.setAttribute("Four", Four);
+*/      
+        request.setAttribute("Produits", ProduitsInCategories);
         request.setAttribute("Categories",dao.getCategorie());
         request.setAttribute("CatSelect",LibelCat);
         request.getRequestDispatcher("index.jsp").forward(request, response);

@@ -40,7 +40,7 @@ public class ApplicationListener implements ServletContextListener {
 	private boolean databaseExists() throws SQLException{
 		boolean result = false;
 
-		DAO dao = new DAO(DataSourceFactory.getDataSource());
+		DAO dao = new DAO();
                 List<ProductEntity> states = dao.allProduct();
                 Logger.getLogger("projetJavaEE").log(Level.INFO, "Database already exists");
                 result = true;
