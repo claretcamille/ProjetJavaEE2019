@@ -115,16 +115,27 @@ public class LoginPage extends HttpServlet {
 		// Le login/password défini dans web.xml
                 DAOClient dao = new DAOClient((DAO) DataSourceFactory.getDataSource());
                 List<ClientEntity> Clients = dao.getAllClient();
-		String login = Clients.getContactClient();
-		String password = Clients.getCodeClient();
-
-		if ((login.equals(loginParam) && (password.equals(passwordParam)))) {
-			// On a trouvé la combinaison login / password
-			// On stocke l'information dans la session
-			HttpSession session = request.getSession(true); // démarre la session
-		} else { // On positionne un message d'erreur pour l'afficher dans la JSP
-			request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
-		}
+                int cpt=0;
+                for(int i=0;i<Clients.size();i++){
+                    String login = Clients.get(i).getContactClient();
+                    String password = Clients.get(i).getCodeClient();
+                
+                    if ((login.equals(loginParam) && (password.equals(passwordParam))))
+                        {
+                            // On a trouvé la combinaison login / password
+                            // On stocke l'information dans la session
+                            HttpSession session = request.getSession(true); // démarre la session
+                        }
+                    else
+                        {
+                            cpt+=1; // Pour le fail
+                        }
+                }
+                
+                if(cpt==Clients.size()) 
+                        { // On positionne un message d'erreur pour l'afficher dans la JSP
+                            request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
+                        }
 	}
 
 	private void doLogout(HttpServletRequest request) {
