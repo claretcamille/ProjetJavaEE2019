@@ -76,9 +76,9 @@ public class DAOClient {
                         donnees.get(5), // ville du Client
                         donnees.get(6), // region du Client
                         codePost, // code_postal du Client
-                        donnees.get(8), // pays du Client
-                        donnees.get(9), // telephone du Client
-                        donnees.get(10) // fax du Client
+                        donnees.get(7), // pays du Client
+                        donnees.get(8), // telephone du Client
+                        donnees.get(9) // fax du Client
                  );
                 result.add(clicli); // Incrémentation du résultat.
             }
