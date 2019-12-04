@@ -40,27 +40,16 @@ public class Affichage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         DAO dao = new DAO(DataSourceFactory.getDataSource()); 
-        String LibelCat = (String) request.getParameter("categories");
+        String LibelCat = (String) request.getParameter("state");
         if(LibelCat == null)
         {
-            LibelCat=dao.getCategorie().get(0).getLibelle();
+            LibelCat= String.valueOf(dao.getCategorie().get(0).getCode());
         }
         
-        List<ProductEntity> ProduitsInCategories = dao.categoryProduct(LibelCat);
-/*        List<Integer> Ref = new LinkedList<Integer>();
-        List<String> Nom = new LinkedList<String>();
-        List<String> Four = new LinkedList<String>();
-        for(int i=0;i<ProduitsInCategories.size();i++){ Ref.add(Integer.parseInt(ProduitsInCategories.get(i).getRef()));
-        Four.add(ProduitsInCategories.get(i).getFourni());
-        Nom.add(ProduitsInCategories.get(i).getNom());}
-
-        request.setAttribute("Ref", Ref);
-        request.setAttribute("Nom", Nom);
-        request.setAttribute("Four", Four);
-*/      
+        List<ProductEntity> ProduitsInCategories = dao.categoryProduct(Integer.parseInt(LibelCat));
         request.setAttribute("Produits", ProduitsInCategories);
         request.setAttribute("Categories",dao.getCategorie());
-        request.setAttribute("CatSelect",LibelCat);
+        request.setAttribute("CatSelect",dao.getCategorie().get(Integer.parseInt(LibelCat)-1).getLibelle());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

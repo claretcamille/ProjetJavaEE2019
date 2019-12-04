@@ -13,20 +13,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Produits in ${CatSelect}</title>
     </head>
+    ${CatSelect}
     <body>
-        $(CatSelect)
         <form>
             <select name='state' onchange='this.form.submit()'>
                 <c:forEach var="state" items="${Categories}">
-                    <option value='${prod}'
+                    <option value=${state.getCode()}
+                            <c:if test="${state.getLibelle() eq CatSelect}">
                             selected
-                    >${prod}</option>
+                        </c:if>
+                    >${state.getLibelle()}</option>
                 </c:forEach>
             </select>
         <input type='submit'>
     </form>
     <table border=2>
-        <tr> <th>Références</th> <th>Nom</th> <th>Fournisseur</th> </tr>
+        <tr> <th>Références</th> <th>Nom</th> <th>Fournisseur</th> <th>Quantité</th> <th>Prix</th> </tr>
 	<tbody>
 
 	<c:forEach items="${Produits}" var="u">
@@ -34,6 +36,8 @@
 			<td>${u.getRef()}</td>
 			<td>${u.getNom()}</td>
 			<td>${u.getFourni()}</td>
+                        <td>${u.getQt()}</td>
+                        <td>${u.getPrix()}</td>
 		</tr>
             </c:forEach>
     </table>
