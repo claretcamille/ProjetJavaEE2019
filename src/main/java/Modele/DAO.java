@@ -179,6 +179,51 @@ public class DAO {
         return result;
     }
     
+    public List<ProductEntity> categoryProduct(int category){
+        
+        List<ProductEntity> result = new LinkedList<>();
+        // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
+
+        String sql2  = "SELECT * FROM PRODUIT  WHERE  categorie =  ?";
+         try(   
+                 Connection myConnection = this.myDao.getConnection();
+                 PreparedStatement stmt2 =  myConnection.prepareStatement(sql2);
+         ){      stmt2.setInt(1, category);
+                 try( ResultSet rs2 = stmt2.executeQuery()){
+                    while(rs2.next()){
+                        // Création d'une liste contenant les données pour les implémenter dans la classe produit
+                        List<String> donnees =new LinkedList<>();
+                        // Ajout des données
+                        donnees.add(rs2.getString("reference"));
+                        donnees.add(rs2.getString("nom"));
+                        donnees.add(rs2.getString("fournisseur"));
+                        donnees.add(rs2.getString("quantite_par_unite"));
+                        donnees.add(rs2.getString("prix_unitaire"));
+                        // Récupération de la catégorie
+                        int catProd = rs2.getInt("categorie");
+                        // Implémentation du produit
+                        ProductEntity prod = new ProductEntity(
+                                donnees.get(0),// ref du produit
+                                donnees.get(1), // nom du produit
+                                donnees.get(2),// fournisseur du produit
+                                catProd, // Num de catégorie du produit
+                                donnees.get(3), // quantité vendu du produit
+                                donnees.get(4) // prix du produit
+                         );
+                        result.add(prod); // Incrémentation du résultat.
+                    }
+                 }    
+             
+             
+         }catch (SQLException ex) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+           // throw new DAOException(ex.getMessage());
+        }          
+        return result;
+    }
+    
+    
+    
     public String getClient(){
         return this.client;
     }

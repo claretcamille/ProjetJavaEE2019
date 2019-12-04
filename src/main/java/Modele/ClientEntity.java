@@ -15,11 +15,15 @@ public class ClientEntity {
     
     private String code;
     private String societe;
+    //private String contact
+    //private String fonction
     private String adresse;
     private String ville;
     private String region ;
     private int codePostal ;
     private String pays;
+    //private String telephone
+    //private String fax
     
     /**
      * Constructeur
