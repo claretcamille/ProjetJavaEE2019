@@ -14,7 +14,6 @@
         <title>Produits in ${CatSelect}</title>
     </head>
     <body>
-        $(CatSelect)
         <form>
             <select name='state' onchange='this.form.submit()'>
                 <c:forEach var="state" items="${Categories}">
@@ -26,7 +25,7 @@
         <input type='submit'>
     </form>
     <table border=2>
-        <tr> <th>Références</th> <th>Nom</th> <th>Fournisseur</th> </tr>
+        <tr> <th>Références</th> <th>Nom</th> <th>Fournisseur</th> <th>Fournisseur</th> <th>Fournisseur</th> </tr>
 	<tbody>
 
 	<c:forEach items="${Produits}" var="u">
@@ -38,5 +37,4 @@
             </c:forEach>
     </table>
     <hr>
-    <a href='${pageContext.request.contextPath}'>Retour au menu</a><br>
 </html>
