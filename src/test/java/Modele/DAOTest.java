@@ -68,7 +68,7 @@ public class DAOTest {
      * Test of allProduct method, of class DAO.
      */
     @Test
-    public void testAllProduct() {
+    public void testAllProduct() throws SQLException {
         System.out.println("allProduct");
         List<ProductEntity> result = this.myDAO.allProduct();
         ProductEntity expResult = new ProductEntity("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");
@@ -103,7 +103,7 @@ public class DAOTest {
      * Test of categoryProduct method, of class DAO.
      */
     @Test
-    public void testCategoryProduct() {
+    public void testCategoryProduct() throws SQLException {
         
         String category = "Boissons";
         ProductEntity expResult = new ProductEntity("1","Chai","1",1,"10 boîtes x 20 sacs","90.00");

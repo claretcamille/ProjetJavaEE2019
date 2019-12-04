@@ -1,10 +1,10 @@
 /*
- * Fichier pour les fonctions générale de la DAO
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package Modele;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,36 +14,22 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
-import org.hsqldb.cmdline.SqlFile;
-import org.hsqldb.cmdline.SqlToolError;
 
 /**
+ *
  * @author camilleclaret
  */
 public class DAO {
     
-    private DataSource myDao;
+    private final DataSource myDao;
     private boolean connectionSite;
     private String client ;
     
-    
-      /**
-     * Constructeur de la classe
-     * @param DataSource est la base de données mise 
-    */
-    public DAO() throws SQLException{
-        this.myDao =  DataSourceFactory.getDataSource();
+    public DAO(DataSource myDataSource){
+        this.myDao = myDataSource;
     }
     
-    /**
-     * Constructeur de la classe
-     * @param DataSource est la base de données mise 
-    */
-    public DAO(DataSource DataSource){
-        this.myDao =  DataSource;
-    }
-
-    /**
+   /**
      * Permet de récupérer la base de donnée
      * @return la base de données utilisé.
      */
@@ -63,7 +49,7 @@ public class DAO {
      * Fonction qui retourne la liste de tous les produit
      * @return la liste de tous les produits
      */
-    public List<ProductEntity> allProduct() {
+    public List<ProductEntity> allProduct() throws SQLException {
         List<ProductEntity> result = new LinkedList<>();
         String sql = "SELECT * FROM PRODUIT WHERE indisponible = 0 ";
         try(
@@ -94,9 +80,6 @@ public class DAO {
                 result.add(prod); // Incrémentation du résultat.
             }
             
-        }catch (SQLException ex) {
-            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-           // throw new DAOException(ex.getMessage());
         }
         return result;
     }
@@ -127,7 +110,7 @@ public class DAO {
      * @param category est la catégorie d'article
      * @return la liste des articles appartenant a la categorie selectionner
      */
-    public List<ProductEntity> categoryProduct(String category){
+    public List<ProductEntity> categoryProduct(String category) throws SQLException{
         
         List<ProductEntity> result = new LinkedList<>();
         // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
@@ -172,14 +155,11 @@ public class DAO {
                  }    
              }
              
-         }catch (SQLException ex) {
-            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-           // throw new DAOException(ex.getMessage());
-        }          
+         }      
         return result;
     }
     
-    public List<ProductEntity> categoryProduct(int category){
+    public List<ProductEntity> categoryProduct(int category) throws SQLException{
         
         List<ProductEntity> result = new LinkedList<>();
         // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
@@ -215,10 +195,7 @@ public class DAO {
                  }    
              
              
-         }catch (SQLException ex) {
-            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-           // throw new DAOException(ex.getMessage());
-        }          
+         }         
         return result;
     }
     
@@ -260,4 +237,5 @@ public class DAO {
          this.connectionSite = false;
          this.client = null;
      }
+    
 }
