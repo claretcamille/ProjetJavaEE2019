@@ -113,18 +113,22 @@ public class LoginPage extends HttpServlet {
 		String passwordParam = request.getParameter("passwordParam");
 
 		// Le login/password défini dans web.xml
-                DAOClient dao = new DAOClient((DAO) DataSourceFactory.getDataSource());
-                List<ClientEntity> Clients = dao.getAllClient();
+                DAO dao = new DAO(DataSourceFactory.getDataSource());
+                DAOClient daoC = new DAOClient(dao);
+                List<ClientEntity> Clients = daoC.getAllClient();
                 int cpt=0;
+                
                 for(int i=0;i<Clients.size();i++){
                     String login = Clients.get(i).getContactClient();
                     String password = Clients.get(i).getCodeClient();
+                    String userName = Clients.get(i).getContactClient();
                 
                     if ((login.equals(loginParam) && (password.equals(passwordParam))))
                         {
                             // On a trouvé la combinaison login / password
                             // On stocke l'information dans la session
                             HttpSession session = request.getSession(true); // démarre la session
+                            session.setAttribute("userName", userName);
                         }
                     else
                         {
