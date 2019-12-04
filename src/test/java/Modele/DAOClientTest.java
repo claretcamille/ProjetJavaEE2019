@@ -71,7 +71,7 @@ public class DAOClientTest {
     @Test
     public void testGetClient() throws Exception {
         System.out.println("getClient");
-        ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste","Obere Str. 57","Berlin","", 12209,"Allemagne");
+        ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","Berlin","", 12209,"Allemagne", "030-0074321" , "030-0076545");
         ClientEntity result = this.myDAOClient.getClient();
         assertEquals(expResult.getCodeClient(), result.getCodeClient());
         assertEquals(expResult.getSocieteClient(), result.getSocieteClient());
