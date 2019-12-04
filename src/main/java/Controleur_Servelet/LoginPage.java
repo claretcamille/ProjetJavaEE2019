@@ -5,8 +5,6 @@
  */
 package Controleur_Servelet;
 
-import Modele.ClientEntity;
-import Modele.DAO;
 import Modele.DataSourceFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,8 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import Modele.DAOClient;
 import java.util.List;
+import Modele.DAO;
+import Modele.DAOClient;
+import Modele.ClientEntity;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +30,7 @@ import java.util.List;
 public class LoginPage extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
+		throws ServletException, IOException, SQLException {
 		String action = request.getParameter("action");
 		if (null != action) {
 			switch (action) {
@@ -70,7 +72,11 @@ public class LoginPage extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -84,7 +90,11 @@ public class LoginPage extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -103,18 +113,17 @@ public class LoginPage extends HttpServlet {
 		String passwordParam = request.getParameter("passwordParam");
 
 		// Le login/password défini dans web.xml
-                DAO dao = new DAO(DataSourceFactory.getDataSource());
-                List<ClientEntity> Clients = dao.getClient();
-		String password = Clients.getContact();
-		String userName = Clients.getCodeClient();
+                DAOClient dao = new DAOClient((DAO) DataSourceFactory.getDataSource());
+                List<ClientEntity> Clients = dao.getAllClient();
+		String login = Clients.getContactClient();
+		String password = Clients.getCodeClient();
 
 		if ((login.equals(loginParam) && (password.equals(passwordParam)))) {
 			// On a trouvé la combinaison login / password
 			// On stocke l'information dans la session
 			HttpSession session = request.getSession(true); // démarre la session
-			session.setAttribute("userName", userName);
 		} else { // On positionne un message d'erreur pour l'afficher dans la JSP
-			request.setAttribute("errorMessage", "Login/Password incorrect");
+			request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
 		}
 	}
 

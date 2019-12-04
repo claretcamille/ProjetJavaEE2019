@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import java.sql.Date; 
 import java.sql.Timestamp;
 import java.util.LinkedList;
+import Modele.ClientEntity;
 
 /**
  *
@@ -44,6 +45,51 @@ public class DAOClient {
         return this.myDAO;
     }
     
+    public List<ClientEntity> getAllClient() throws SQLException {
+        List<ClientEntity> result = new LinkedList<>();
+        String sql = "SELECT * FROM CLIENT";
+        try(
+                Connection myConnection = this.myDAOClient.getConnection();
+                PreparedStatement stmt = myConnection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ){
+            while(rs.next()){
+                List<String> donnees =new LinkedList<>();
+                donnees.add(rs.getString("code"));
+                donnees.add(rs.getString("societe"));
+                donnees.add(rs.getString("contact"));
+                donnees.add(rs.getString("fonction"));
+                donnees.add(rs.getString("adresse"));
+                donnees.add(rs.getString("ville"));
+                donnees.add(rs.getString("region"));
+                int codePost = rs.getInt("code_postal");
+                donnees.add(rs.getString("pays"));
+                donnees.add(rs.getString("telephone"));
+                donnees.add(rs.getString("fax"));
+                // Implémentation du produit
+                ClientEntity clicli = new ClientEntity(
+                        donnees.get(0), // code du Client
+                        donnees.get(1), // societe du Client
+                        donnees.get(2), // contact du Client
+                        donnees.get(3), // fonction du Client
+                        donnees.get(4), // adresse du Client
+                        donnees.get(5), // ville du Client
+                        donnees.get(6), // region du Client
+                        codePost, // code_postal du Client
+                        donnees.get(8), // pays du Client
+                        donnees.get(9), // telephone du Client
+                        donnees.get(10) // fax du Client
+                 );
+                result.add(clicli); // Incrémentation du résultat.
+            }
+            
+        }catch (SQLException ex) {
+            Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+           // throw new DAOException(ex.getMessage());
+        }
+        return result;
+    }
+    
     /**
      * fonction récupérent les infos sur le client
      * @return
@@ -61,13 +107,17 @@ public class DAOClient {
                  
                 String code = rs.getNString("code");
                 String societe = rs.getNString("societe");;
+                 String contact = rs.getNString("contact");;
+                String fonction = rs.getNString("fonction");;
                 String adresse = rs.getNString("adresse");;
                 String ville = rs.getNString("ville");;
                 String region = rs.getNString("region");;
                 int codePostal  = rs.getInt("code_postal");
                 String pays = rs.getNString("pays");;
+                String telephone = rs.getNString("telephone");;
+                String fax = rs.getNString("fax");;
                 
-                result = new ClientEntity(code, societe, adresse, ville, region, codePostal, pays);
+                result = new ClientEntity(code, societe, contact , fonction , adresse, ville, region, codePostal, pays , telephone , fax);
             }
         }
        return result;
