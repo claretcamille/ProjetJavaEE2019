@@ -22,20 +22,22 @@ import javax.sql.DataSource;
 public class DAOAdmin {
     
     private final DataSource myDAOAdmin;
-    private DAO dao;
+    private final DAO myDAO;
     
     /**
      * Constructeur de la classe
      * @param myDAO est la dao générale créer
      */
-    public DAOAdmin(DAO myDAO){
-        this.myDAOAdmin = myDAO.getDAO();// récupération de la base générale
-        dao = myDAO;
+    public DAOAdmin(DataSource myDAO){
+        this.myDAOAdmin = myDAO;// récupération de la base générale
+        this.myDAO = new DAO(myDAO);
     }
     
     public DAO getDAO(){
-        return this.dao;
+        return this.myDAO;
     }
+    
+    
     
     /**
      * Fonction permettant l'ajout d'un produit a la base de donnée

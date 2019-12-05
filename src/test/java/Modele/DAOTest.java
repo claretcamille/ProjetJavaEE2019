@@ -123,20 +123,18 @@ public class DAOTest {
      * Test of getConnection() method, of class DAO.
      */
     @Test
-    public void testgetConnection() {
+    public void testgetConnection() throws SQLException {
         System.out.println("toConnect");
         // test connection admin
-        this.myDAO.toConnect("admin", "admin");
-        assertEquals(this.myDAO.getConnection(), true);
+        this.myDAO.toConnectAdmin("admin", "admin");
+        assertEquals(this.myDAO.getCode(),"admin");
          // test connection admin
-        this.myDAO.toDisconnect();
-        assertEquals(this.myDAO.getConnection(), false);
+        assertEquals(this.myDAO.toDisconnectAdmin(), null);
+         // test connection client
+         this.myDAO.toConnectClient("Maria Anders", "ALFKI");
+        assertEquals(this.myDAO.getCode(),"ALFKI");
          // test connection admin
-        this.myDAO.toConnect("Maria Anders", "ALFKI");
-        assertEquals(this.myDAO.getConnection(), true);
-         // test connection admin
-        this.myDAO.toDisconnect();
-        assertEquals(this.myDAO.getConnection(), false);
+        assertEquals(this.myDAO.toDisconnectClient(), null);
     }
     
     public static javax.sql.DataSource getTestDataSource() {

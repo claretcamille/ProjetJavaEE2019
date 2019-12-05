@@ -53,7 +53,7 @@ public class LoginPage extends HttpServlet {
 
 		} else { // L'utilisateur est connecté
 			// On choisit la page d'affichage
-			jspView = "index.jsp";
+			jspView = "firstPage.html";
 		}
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
@@ -114,14 +114,11 @@ public class LoginPage extends HttpServlet {
 
 		// Le login/password défini dans web.xml
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
-                DAOClient daoC = new DAOClient(dao);
-                List<ClientEntity> Clients = daoC.getAllClient();
-                int cpt=0;
-                
-                for(int i=0;i<Clients.size();i++){
-                    String login = Clients.get(i).getContactClient();
-                    String password = Clients.get(i).getCodeClient();
-                    String userName = Clients.get(i).getContactClient();
+                DAOClient daoC = dao.toConnectClient(loginParam, loginParam);
+                ClientEntity Clients = daoC.getClient();
+                    String login = Clients.getContactClient();
+                    String password = Clients.getCodeClient();
+                    String userName = Clients.getContactClient();
                 
                     if ((login.equals(loginParam) && (password.equals(passwordParam))))
                         {
@@ -129,15 +126,12 @@ public class LoginPage extends HttpServlet {
                             // On stocke l'information dans la session
                             HttpSession session = request.getSession(true); // démarre la session
                             session.setAttribute("userName", userName);
-                        }
-                    else
-                        {
-                            cpt+=1; // Pour le fail
-                        }
-                }
-                
-                if(cpt==Clients.size()) 
-                        { // On positionne un message d'erreur pour l'afficher dans la JSP
+                        }else if(loginParam.equals(loginParam) && loginParam.equals("admin") )
+                        { // alors l'utilisateur est peut-être un administrateur
+                            HttpSession session = request.getSession(true); // démarre la session
+                            request.setAttribute("errorMessage", "admin");
+                        }else{
+                            // On positionne un message d'erreur pour l'afficher dans la JSP
                             request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
                         }
 	}

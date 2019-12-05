@@ -42,7 +42,7 @@ public class DAOAdminTest {
         this.executeSQLScript(this.myConnection, "comptoirs_data.sql");
         
         this.myDAO= new DAO(this.myDataSource);
-        this.myDAOAdmin = new DAOAdmin(this.myDAO);
+        this.myDAOAdmin = new DAOAdmin(this.myDAO.getDAO());
     }
     
     @After

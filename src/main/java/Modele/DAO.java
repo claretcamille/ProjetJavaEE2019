@@ -25,6 +25,7 @@ public class DAO {
     private boolean connectionSite;
     private String client ;
     
+    
     public DAO(DataSource myDataSource){
         this.myDao = myDataSource;
     }
@@ -43,6 +44,10 @@ public class DAO {
      */
     public boolean getConnection(){
         return this.connectionSite;
+    }
+    
+    public String getCode(){
+        return this.client;
     }
     
     /**
@@ -198,20 +203,49 @@ public class DAO {
          }         
         return result;
     }
-    
-    
-    
-    public String getClient(){
-        return this.client;
+   
+    /**
+     * fonction récupérent les infos sur le client
+     * @return
+     * @throws SQLException 
+     */
+    public List<ClientEntity> getClient() throws SQLException{
+        List<ClientEntity> result = new LinkedList<>();
+        String sql = "SELECT * FROM CLIENT ";
+        try(
+                Connection myConnection = this.myDao.getConnection();
+                PreparedStatement stmt = myConnection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ){
+            if(rs.next()){
+                 
+                String code = rs.getNString("code");
+                String societe = rs.getNString("societe");;
+                 String contact = rs.getNString("contact");;
+                String fonction = rs.getNString("fonction");;
+                String adresse = rs.getNString("adresse");;
+                String ville = rs.getNString("ville");;
+                String region = rs.getNString("region");;
+                int codePostal  = rs.getInt("code_postal");
+                String pays = rs.getNString("pays");;
+                String telephone = rs.getNString("telephone");;
+                String fax = rs.getNString("fax");;
+                
+                result.add(new ClientEntity(code, societe, contact , fonction , adresse, ville, region, codePostal, pays , telephone , fax));
+            }
+        }
+       return result;
     }
+    
     
     /**
      * Fonction permettant la connection en administateur ou non.
      * @param user
      * @param pw
      */
-    public void toConnect(String user, String pw){
-        boolean result = false;
+    public  DAOClient toConnectClient(String user, String pw) throws SQLException{
+        DataSource myDataSource = this.getDAO();
+        DAOClient result = null ;
         String sql = "SELECT * FROM CLIENT Where contact = ?";
         try(
                 Connection myConnection = this.myDao.getConnection();
@@ -222,7 +256,11 @@ public class DAO {
                if(rs.next()){
                    String mdp = rs.getString("code");
                    this.client = mdp;
-                   result = pw.equals(mdp);
+                    if(pw.equals(mdp)){
+                        result = new DAOClient(myDataSource, pw);
+                        result.setCodeClient(mdp);
+                        this.client = pw;
+                    }
                }
            }
             
@@ -230,12 +268,25 @@ public class DAO {
             Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
            // throw new DAOException(ex.getMessage());
         }  
-        this.connectionSite =  (user.equals("admin") && pw.equals("admin"))|| result ;
+        return result;
+    }
+    public DAOAdmin toConnectAdmin(String user, String pw) throws SQLException{
+        DAOAdmin result = null;
+        if(user.equals("admin") && pw.equals("admin")){
+            result = new DAOAdmin(this.getDAO());
+            this.client = pw;
+        }
+        return result;
     }
     
-     public void toDisconnect(){
-         this.connectionSite = false;
-         this.client = null;
+    
+    
+     public DAOClient toDisconnectClient(){
+         return null;
+     }
+     
+     public DAOAdmin toDisconnectAdmin(){
+         return null;
      }
     
 }

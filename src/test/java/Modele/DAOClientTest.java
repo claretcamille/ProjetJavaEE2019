@@ -5,20 +5,18 @@
  */
 package Modele;
 
-import static Modele.DAOAdminTest.getTestDataSource;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
+import javax.sql.DataSource;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -45,8 +43,7 @@ public class DAOClientTest {
         this.executeSQLScript(this.myConnection, "comptoirs_data.sql");
         
         this.myDAO= new DAO(this.myDataSource);
-        this.myDAO.toConnect("Maria Anders", "ALFKI");
-        this.myDAOClient = new DAOClient(this.myDAO);
+        this.myDAOClient = this.myDAO.toConnectClient("Maria Anders", "ALFKI");
     }
     
     @After
@@ -60,8 +57,8 @@ public class DAOClientTest {
     @Test
     public void testGetDAO() {
         System.out.println("getDAO");
-        DAO expResult =  this.myDAO;
-        DAO result = this.myDAOClient.getDAO();
+        DataSource expResult =  this.myDAO.getDAO();
+        DataSource result = this.myDAOClient.getDAO();
         assertEquals(expResult, result);
     }
 

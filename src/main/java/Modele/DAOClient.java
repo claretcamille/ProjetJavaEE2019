@@ -21,18 +21,20 @@ import Modele.ClientEntity;
  *
  * @author camilleclaret
  */
-public class DAOClient {
+public final class DAOClient {
     
-    private DataSource myDAOClient;
-    private  DAO myDAO;
+    private final DataSource myDAOClient;
     private ClientEntity client;
+    private String codeClient;
     
     /**
      * Constructeur de la classe
+     * @param dao
+     * @throws java.sql.SQLException
      */
-    public DAOClient(DAO dao) throws SQLException{
-        this.myDAOClient =  dao.getDAO();// récupération de la base générale
-        this.myDAO = dao;
+    public DAOClient(DataSource dao, String Code) throws SQLException{
+        this.myDAOClient =  dao;
+        this.setCodeClient(Code);
         this.client = this.getClient();
         
     }
@@ -41,19 +43,29 @@ public class DAOClient {
      * Récupération de la dao générale
      * @return 
      */
-    public DAO getDAO(){
-        return this.myDAO;
+    public DataSource getDAO(){
+        return this.myDAOClient;
     }
     
-    public List<ClientEntity> getAllClient() throws SQLException {
-        List<ClientEntity> result = new LinkedList<>();
-        String sql = "SELECT * FROM CLIENT";
+    /**
+     * 
+     * @param code
+     * @return
+     * @throws SQLException 
+     */
+    public void setCodeClient(String code){
+        this.codeClient = code;
+    }
+    
+    public ClientEntity getClient() throws SQLException {
+        ClientEntity result = null;
+        String sql = "SELECT * FROM CLIENT WHERE code = '"+this.codeClient+"'";
         try(
                 Connection myConnection = this.myDAOClient.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
         ){
-            while(rs.next()){
+            if(rs.next()){
                 List<String> donnees =new LinkedList<>();
                 donnees.add(rs.getString("code"));
                 donnees.add(rs.getString("societe"));
@@ -67,7 +79,7 @@ public class DAOClient {
                 donnees.add(rs.getString("telephone"));
                 donnees.add(rs.getString("fax"));
                 // Implémentation du produit
-                ClientEntity clicli = new ClientEntity(
+                result = new ClientEntity(
                         donnees.get(0), // code du Client
                         donnees.get(1), // societe du Client
                         donnees.get(2), // contact du Client
@@ -80,7 +92,7 @@ public class DAOClient {
                         donnees.get(8), // telephone du Client
                         donnees.get(9) // fax du Client
                  );
-                result.add(clicli); // Incrémentation du résultat.
+               
             }
             
         }catch (SQLException ex) {
@@ -88,39 +100,6 @@ public class DAOClient {
            // throw new DAOException(ex.getMessage());
         }
         return result;
-    }
-    
-    /**
-     * fonction récupérent les infos sur le client
-     * @return
-     * @throws SQLException 
-     */
-    public ClientEntity getClient() throws SQLException{
-        ClientEntity result = null;
-        String sql = "SELECT * FROM CLIENT WHERE CODE  = '"+this.myDAO.getClient()+"'";
-        try(
-                Connection myConnection = this.myDAOClient.getConnection();
-                PreparedStatement stmt = myConnection.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()
-        ){
-            if(rs.next()){
-                 
-                String code = rs.getNString("code");
-                String societe = rs.getNString("societe");;
-                 String contact = rs.getNString("contact");;
-                String fonction = rs.getNString("fonction");;
-                String adresse = rs.getNString("adresse");;
-                String ville = rs.getNString("ville");;
-                String region = rs.getNString("region");;
-                int codePostal  = rs.getInt("code_postal");
-                String pays = rs.getNString("pays");;
-                String telephone = rs.getNString("telephone");;
-                String fax = rs.getNString("fax");;
-                
-                result = new ClientEntity(code, societe, contact , fonction , adresse, ville, region, codePostal, pays , telephone , fax);
-            }
-        }
-       return result;
     }
     
     /**
