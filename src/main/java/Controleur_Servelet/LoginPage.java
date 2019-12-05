@@ -51,10 +51,12 @@ public class LoginPage extends HttpServlet {
 			// On choisit la page de login
 			jspView = "login.jsp";
 
-		} else { // L'utilisateur est connecté
-			// On choisit la page d'affichage
-			jspView = "firstPage.html";
-		}
+	
+		} else if(userName.equals("admin")){
+                                                                 jspView = "FirstPageAdmin.html";
+                                            } else{
+                                                        jspView = "FirstPageClient.html";
+                                                    }
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
 
@@ -114,7 +116,7 @@ public class LoginPage extends HttpServlet {
 
 		// Le login/password défini dans web.xml
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
-                DAOClient daoC = dao.toConnectClient(loginParam, loginParam);
+                DAOClient daoC = dao.toConnectClient(loginParam, passwordParam);
                 ClientEntity Clients = daoC.getClient();
                     String login = Clients.getContactClient();
                     String password = Clients.getCodeClient();
