@@ -10,13 +10,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login Page</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
         <div style="color:red">${errorMessage}</div>
-        <form action="LoginPage" method="POST">
+        <h1> Bienvenue sur la page de connexion </h1>
+        <form  id="login" action="LoginPage" method="POST">
             login : <input name='loginParam'><br>
             password : <input name='passwordParam' type='password'><br>
-            <input type='submit' name='action' value='login'>
+            <input id ="valide"type='submit' name='action' value='login'>
 	</form>
     </body>
 </html>
