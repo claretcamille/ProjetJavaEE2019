@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Client JQuery</title>
+		<title>Bienvenue</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<!-- On charge la bibliothèque JQuery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -64,50 +64,52 @@
 			alert("Erreur: " + status + " : " + message);
 		}
         </script>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
         <!-- un CSS pour formatter la table -->
         <link rel="stylesheet" type="text/css" href="css/tableformat.css">
     </head>
     <body>
         <div>
             <h1> Choix des produits : </h1>
-            <li><a href="CategorieListServelet" target="_blank">Liste des états en JSON</a></li>
-            <li><a href="ListeProduitCategorieServlet?categorie=Boissons" target="_blank">Liste des clients dans un état en JSON</a></li>
         </div>
         
         </div>
-        <div id="erreur"></div>
-        <form>
-            <label for="categorie">Choix de la catégorie : </label>
-            <select id="categorie"></select>
-        </form>
-        
-        <!-- La zone où les résultats vont s'afficher -->
-        <div id="product"></div>
-        <!-- Le template qui sert à formatter la liste des clients résultats-->
-        <script id="productTemplate" type="text/template">
-            <TABLE>
-             <tr> <th>Références</th> <th>Nom</th> <th>Quantité</th> <th>Prix</th> </tr>
-             {{! Pour chaque enregistrement }}
-             {{#records}}
-                 <TR>
-                     <TD>{{ref}}</TD>
-                     <TD>{{nom}}</TD>
-                     <TD>{{quantite}}</TD> 
-                     <TD>{{prix}}</TD>
-                 </TR>
-             {{/records}}
-          </TABLE>  
-        </script> 
-         
-        
-        <!-- Le template qui sert à formatter la liste des clients résultats -->
-        <script id="selectTemplate" type="text/template">
-        {{! Pour chaque état dans le tableau}}
-        {{#records}}
-            {{! Une option dans le select }}
-            {{! le point représente la valeur courante du tableau }}
-            <OPTION VALUE="{{.}}">{{.}}</OPTION>
-        {{/records}}
-    </script>
+   
+            <div id="erreur"></div>
+            <form>
+                <label for="categorie">Choix de la catégorie : </label>
+                <select id="categorie"></select>
+            </form>
+            <br>
+
+            <!-- La zone où les résultats vont s'afficher -->
+            <div id="product"></div>
+            <!-- Le template qui sert à formatter la liste des clients résultats-->
+            <script id="productTemplate" type="text/template">
+                <TABLE>
+                 <tr> <th>Références</th> <th>Nom</th> <th>Quantité</th> <th>Prix</th> </tr>
+                 {{! Pour chaque enregistrement }}
+                 {{#records}}
+                     <TR>
+                         <TD>{{ref}}</TD>
+                         <TD>{{nom}}</TD>
+                         <TD>{{quantite}}</TD> 
+                         <TD>{{prix}}</TD>
+                     </TR>
+                 {{/records}}
+              </TABLE>  
+            </script> 
+
+
+            <!-- Le template qui sert à formatter la liste des clients résultats -->
+            <script id="selectTemplate" type="text/template">
+            {{! Pour chaque état dans le tableau}}
+            {{#records}}
+                {{! Une option dans le select }}
+                {{! le point représente la valeur courante du tableau }}
+                <OPTION VALUE="{{.}}">{{.}}</OPTION>
+            {{/records}}
+        </script>
+   
     </body>
 </html>
