@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Mes Commandes</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- On charge la bibliothèque JQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<!-- On charge le moteur de template mustache https://mustache.github.io/ -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
+		<script>
+			$(document).ready(// Exécuté à la fin du chargement de la page
+				function () {
+					showCommands();
+				}
+			);
+		
+			// Afficher les clients dans l'état sélectionné
+			function showCommands() {
+					
+				// On fait un appel AJAX pour chercher les clients de cet état
+				$.ajax({
+					url: "ListeCommandeClientServlet",
+					dataType: "json",
+					success: // La fonction qui traite les résultats
+						function(result) {
+							// Le code source du template est dans la page
+							var template = $('#commandesTemplate').html();
+							// On combine le template avec le résultat de la requête
+							var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
+							// On affiche le résultat dans la page
+							$('#commandes').html(processedTemplate);	
+						},
+					error: showError
+				});				
+			}
+
+		// Fonction qui traite les erreurs de la requête
+		function showError(xhr, status, message) {
+			alert("Erreur: " + status + " : " + message);
+		}
+        </script>
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+    </head>
+    <body>
+        <div>
+            <a id="connexion" href="../firstPage.html">Deconnection</a>
+            <a id="connexion" href="../FirstPageClient.html">Page Acceuil</a>
+            <a id="connexion" href="MesInfos.html">Mes Infos</a>
+            <br>
+            <h1> Affichage des produit disponible : </h1>
+            <h2>Veuillez selectionner par categorie.</h2>
+            <a href="ListeCommandeClientServlet?clientCode=ALFKI"> Liste commandes</a>
+            
+        </div>
+        
+        
+
+            <!-- La zone où les résultats vont s'afficher -->
+            <div id="commandes"></div>
+            <!-- Le template qui sert à formatter la liste des clients résultats-->
+            <script id="commandesTemplate" type="text/template">
+                <TABLE>
+                 <tr> <th>Numéro</th> <th>Prix</th> <th>Data de saisie</th> <th>Contenue</th> </tr>
+                 {{! Pour chaque enregistrement }}
+                 {{#records}}
+                     <TR>
+                         <TD>{{numero}}</TD>
+                         <TD>{{port}}</TD>
+                         <TD>{{saisieLe}}</TD> 
+                         <TD><a href="MesLigneCommande.html"> Voir la totalité<a></TD>
+                     </TR>
+                 {{/records}}
+              </TABLE>  
+            </script> 
+
+   
+    </body>
+</html>

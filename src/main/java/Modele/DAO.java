@@ -24,6 +24,7 @@ public class DAO {
     private final DataSource myDao;
     private boolean connectionSite;
     private String client ;
+    private  DAOClient DAOClient;
     
     
     public DAO(DataSource myDataSource){
@@ -259,6 +260,7 @@ public class DAO {
                     if(pw.equals(mdp)){
                         result = new DAOClient(myDataSource, pw);
                         result.setCodeClient(mdp);
+                        this.DAOClient = result;
                         this.client = pw;
                     }
                }
@@ -275,6 +277,7 @@ public class DAO {
         if(user.equals("admin") && pw.equals("admin")){
             result = new DAOAdmin(this.getDAO());
             this.client = pw;
+            
         }
         return result;
     }
