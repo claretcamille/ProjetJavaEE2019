@@ -111,10 +111,28 @@ public class DAOClientTest {
         // Nbr de commande du client
         assertEquals(3,result.size());
     }
+    
+    /**
+     * Test of calculPrix method, of class DAOClient.
+     */
+    @Test
+    public void testCalculPrix() throws Exception {
+        System.out.println("calculPrix");
+        int numCommand = 10702;
+        DAOClient instance = this.myDAOClient;
+        float result = instance.calculPrix(numCommand);
+        float expResult = 1650F;
+        if (expResult == result){
+            assertEquals(true, true);
+        } else {
+            assertEquals(false, true);
+        }
+    }
+    
  
     /**
      * Test of addLineCommand method, of class DAOClient.
-    
+    */
     @Test
     public void testAddLineCommand() throws Exception {
         System.out.println("addLineCommand");
@@ -130,13 +148,11 @@ public class DAOClientTest {
         // Vérif des infos 
        assertEquals(expResult.getProduct(), result.getLignes().get(0).getProduct());
        assertEquals(expResult.getQuantite(), result.getLignes().get(0).getQuantite());
-       // vérif mise a jour du port
-       assertEquals(119,result.getPort());  
     }
-    */
+    
     /**
      * Test of modifLineCommand method, of class DAOClient.
-     
+     */
     @Test
     public void testModifLineCommand() throws Exception {
         System.out.println("modifLineCommand");
@@ -152,24 +168,23 @@ public class DAOClientTest {
         // Vérif des infos 
        assertEquals(expResult.getProduct(), result.getLignes().get(0).getProduct());
        assertEquals(expResult.getQuantite(), result.getLignes().get(0).getQuantite());
-       // vérif mise a jour du port
-       assertEquals(119,result.getPort());  
     }
- */
+ 
     /**
      * Test of supLineCommand method, of class DAOClient.
-
+     * @throws java.lang.Exception
+    */
     @Test
     public void testSupLineCommand() throws Exception {
         System.out.println("supLineCommand");
-        int numCommand = 0;
-        int refProduct = 0;
-        DAOClient instance = null;
+        int numCommand = 10248;
+        int refProduct = 3;
+        DAOClient instance = this.myDAOClient;
         instance.supLineCommand(numCommand, refProduct);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        CommandeEntity result = new CommandeEntity(numCommand,119,"1995-11-13",instance.getLigne(numCommand));
+        assertEquals(1, result.getLignes().size());
     }
-*/
+
     /**
      * Test of modifInfoClient method, of class DAOClient.
      

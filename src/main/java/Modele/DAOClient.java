@@ -231,46 +231,35 @@ public final class DAOClient {
         }
     }
     
-     public  void calculPrix(int numCommand) throws SQLException{
-         
-         String sql1= "UPDATE COMMANDE SET port = ? WHERE numero = "+numCommand; // mise à jour de la commande
-         
-         List<CommandeEntity> commande = this.getCommande();
-         int index = 0;
-         while (numCommand != commande.get(index).getNum()){
-             index++;
-         }
-         String sql2 = "SELECT * FROM PRODUIT WHERE reference = ?"; // calcul du cout de la ligne
-         float port = 0F;
-         try( 
-                Connection myConnection = this.myDAOClient.getConnection();
-                PreparedStatement stmt2 = myConnection.prepareStatement(sql2)
-             ){
-             
-                for(int i = 0; i < commande.get(index).getLignes().size(); i++){
-                    int ref = commande.get(index).getLignes().get(i).getProduct();
-                    stmt2.setInt(1, ref);
-                    try(ResultSet rs2 = stmt2.executeQuery();){
-                        port += rs2.getFloat("prix_unitaire")*commande.get(index).getLignes().get(i).getQuantite();
-                    }
-                }
-                
-                myConnection.setAutoCommit(false);
-                try(PreparedStatement stmt1 = myConnection.prepareStatement(sql1)){
-                    stmt1.setFloat(1, port);
-                    stmt1.executeUpdate();
-                    myConnection.commit(); // Validation de la transaction
-                }
-                catch (SQLException ex) {
-                    Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
-                    // throw new DAOException(ex.getMessage());
-                    myConnection.rollback(); // On annule la transaction
-                } finally{
-                     myConnection.setAutoCommit(true); // On revient au mode de fonctionnement sans transaction
-                }
-                
-         }
-  
+     public  float calculPrix(int numCommand) throws SQLException{
+          
+         float result = 0F;
+          String sql = "SELECT * FROM PRODUIT WHERE reference = ?";
+          
+          // Recherche de la commande dont on veut calculer le prix:
+          List<CommandeEntity> myListCommande = this.getCommande();
+          int index = 0;
+          while(numCommand != myListCommande.get(index).getNum()){
+              index += 1;
+          }
+          CommandeEntity myCommande = myListCommande.get(index);
+          
+          try(Connection myConnection = this.myDAOClient.getConnection();
+                  PreparedStatement stmt = myConnection.prepareStatement(sql)
+                  ){
+              for(int i = 0; i < myCommande.getLignes().size(); i++){
+                  stmt.setInt(1, myCommande.getLignes().get(i).getProduct());
+                  try(ResultSet rs = stmt.executeQuery()){
+                      if(rs.next()){
+                          float prix = rs.getFloat("PRIX_UNITAIRE");
+                          int qt = myCommande.getLignes().get(i).getQuantite();
+                          result += prix*qt;
+                      }            
+                  }
+              }
+              
+          }
+          return result;
      }
      
      /**
@@ -279,28 +268,21 @@ public final class DAOClient {
       * @param info 
       */
     public void addLineCommand(int numCommand, ProductEntity info, int qt) throws SQLException{
-        String sql1 = "INSERT INTO LIGNE VALUES(?,?,?)"; // Insertion de la ligne de commande  
-        String sql2= "SELECT * FROM COMMANDE WHERE numero = "+numCommand; // info sur la commande
+        String sql = "INSERT INTO LIGNE VALUES(?,?,?)"; // Insertion de la ligne de commande  
         
         try(
                 Connection myConnection = this.myDAOClient.getConnection();
-                PreparedStatement stmt1 = myConnection.prepareStatement(sql1);
-                PreparedStatement stmt2 = myConnection.prepareStatement(sql2)
+                PreparedStatement stmt = myConnection.prepareStatement(sql);
             ){
             // On démarre la transaction
             myConnection.setAutoCommit(false);
             try{
                 // Ajout de la ligne 
-                stmt1.setInt(1, numCommand);
+                stmt.setInt(1, numCommand);
                 int ref = Integer.parseInt(info.getRef());
-                stmt1.setInt(2, ref);
-                stmt1.setInt(3, qt);
-                stmt1.executeUpdate();
-                
-                // calcul du cout
-               this.calculPrix(numCommand);
-                
-
+                stmt.setInt(2, ref);
+                stmt.setInt(3, qt);
+                stmt.executeUpdate();
                 myConnection.commit(); // Validation de la transaction
             }catch (SQLException ex) {
                 Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
@@ -348,7 +330,7 @@ public final class DAOClient {
      * @param refProduct 
      */
     public void supLineCommand(int numCommand, int refProduct ) throws SQLException{
-        String sql = "DROP FROM LIGNE  WHERE commade = "+numCommand+" and produit = "+refProduct;
+        String sql = "DELETE FROM LIGNE  WHERE commande = "+numCommand+" and produit = "+refProduct;
         try(
                 Connection myConnection = this.myDAOClient.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql)
