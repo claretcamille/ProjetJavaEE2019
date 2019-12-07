@@ -58,12 +58,7 @@
             <version>10.14.1.0</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>projetJavaEE2019</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
+        
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
