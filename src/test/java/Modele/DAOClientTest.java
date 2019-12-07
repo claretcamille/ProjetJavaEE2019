@@ -173,7 +173,7 @@ public class DAOClientTest {
     /**
      * Test of supLineCommand method, of class DAOClient.
      * @throws java.lang.Exception
-    */
+   
     @Test
     public void testSupLineCommand() throws Exception {
         System.out.println("supLineCommand");
@@ -183,7 +183,7 @@ public class DAOClientTest {
         instance.supLineCommand(numCommand, refProduct);
         CommandeEntity result = new CommandeEntity(numCommand,119,"1995-11-13",instance.getLigne(numCommand));
         assertEquals(1, result.getLignes().size());
-    }
+    } */
 
     /**
      * Test of modifInfoClient method, of class DAOClient.
