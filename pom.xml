@@ -13,20 +13,6 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
-    <scm>
-      <url>http://www.svn.com</url>
-      <connection>scm:svn:http://localhost:8080/svn/jrepo/trunk/Framework</connection>
-      <developerConnection>scm:svn:${admin}/${}@localhost:8080:common_core_api:1101:code</developerConnection>
-   </scm>
-   <distributionManagement>
-      <repository>
-         <id>Core-API-Java-Release</id>
-         <name>Release repository</name>
-         <url>http://localhost:8081/nexus/content/repositories/Core-Api-Release</url>
-      </repository>
-   </distributionManagement>
-    
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
