@@ -74,7 +74,7 @@ public final class DAOClient {
                 donnees.add(rs.getString("adresse"));
                 donnees.add(rs.getString("ville"));
                 donnees.add(rs.getString("region"));
-                int codePost = rs.getInt("code_postal");
+                String codePost = rs.getString("code_postal");
                 donnees.add(rs.getString("pays"));
                 donnees.add(rs.getString("telephone"));
                 donnees.add(rs.getString("fax"));
@@ -181,7 +181,7 @@ public final class DAOClient {
                 stmt.setString(6,this.client.getAdresseClient());
                 stmt.setString(7,this.client.getVilleClient());
                 stmt.setString(8, this.client.getRegionClient());
-                stmt.setInt(9,this.client.getCodePostal());
+                stmt.setString(9,this.client.getCodePostal());
                 stmt.setString(10,this.client.getPaysClient());
                 stmt.setInt(11,remise);
                 
@@ -284,6 +284,7 @@ public final class DAOClient {
                 stmt.setInt(3, qt);
                 stmt.executeUpdate();
                 myConnection.commit(); // Validation de la transaction
+                this.client = this.getClient(); // Mise a jour du client 
             }catch (SQLException ex) {
                 Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
                // throw new DAOException(ex.getMessage());
@@ -361,7 +362,7 @@ public final class DAOClient {
      */
     public void modifInfoClient(String choixModif, String modif) throws SQLException{
         
-        String sql = "UPDATE CLIENT SET "+choixModif +" = ? WHERE code = "+this.client.getCodeClient();
+        String sql = "UPDATE CLIENT SET "+choixModif +" = ? WHERE code = '"+this.client.getCodeClient()+"'";
         try(
                 Connection myConnection = this.myDAOClient.getConnection();
                 PreparedStatement stmt = myConnection.prepareStatement(sql)
@@ -369,7 +370,7 @@ public final class DAOClient {
              // On démarre la transaction
             myConnection.setAutoCommit(false);
             try{
-                stmt.setString(1, "modif");
+                stmt.setString(1, modif);
                 // Mise a jour
                 stmt.executeUpdate();
                 

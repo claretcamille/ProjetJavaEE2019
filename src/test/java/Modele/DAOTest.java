@@ -137,6 +137,30 @@ public class DAOTest {
         assertEquals(this.myDAO.toDisconnectClient(), null);
     }
     
+    /**
+     * Test of getClient() method, of class DAO.
+     */
+    @Test
+    public void testgetClient() throws SQLException {
+        System.out.println("getClient");
+        List<ClientEntity> result = this.myDAO.getClient();
+        assertEquals(91, result.size());
+        
+    }
+    
+    /**
+     * Test of getClient() method, of class DAO.
+     */
+    @Test
+    public void testcategoryProduct() throws SQLException {
+        System.out.println("categoryProduct");
+        List<ProductEntity> result1 = this.myDAO.categoryProduct(1);
+        List<ProductEntity> result2 = this.myDAO.categoryProduct("Boissons");
+        assertEquals(12, result1.size());
+        assertEquals(result2.size(), result1.size());
+        
+    }
+    
     public static javax.sql.DataSource getTestDataSource() {
         org.hsqldb.jdbc.JDBCDataSource ds = new org.hsqldb.jdbc.JDBCDataSource();
         ds.setDatabase("jdbc:hsqldb:mem:testcase;shutdown=true");

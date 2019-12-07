@@ -120,23 +120,21 @@ public class DAO {
         
         List<ProductEntity> result = new LinkedList<>();
         // Commande sql : la première récupére le code de la category la seconde donne les produits correspondant
-        String sql1 = "SELECT * FROM CATEGORIE WHERE libelle =?";
-        String sql2  = "SELECT * FROM PRODUIT  WHERE  categorie =  ?";
+        String sql1 = "SELECT * FROM CATEGORIE WHERE libelle = '"+category+"'";
+        
          try(   
                  Connection myConnection = this.myDao.getConnection();
                  PreparedStatement stmt1 = myConnection.prepareStatement(sql1);
-                 PreparedStatement stmt2 =  myConnection.prepareStatement(sql2);
          ){
              // Récupération du code 
-             stmt1.setString(1, category); // donne que vaut le libelle  pour sql1
              try( ResultSet rs1 = stmt1.executeQuery() ){
                  if(rs1.next()){
                  int code = rs1.getInt("code"); // récupére le code de categorie 
-                 stmt2.setInt(1, code);// donne que vaut le code pour sql2 
-                 }
+                 String sql2  = "SELECT * FROM PRODUIT  WHERE  categorie =  "+code;
                  // Récupération des produits
-                 try( ResultSet rs2 = stmt2.executeQuery()){
-                    while(rs2.next()){
+                 try(PreparedStatement stmt2 =  myConnection.prepareStatement(sql2);
+                         ResultSet rs2 = stmt2.executeQuery()){
+                      while(rs2.next()){
                         // Création d'une liste contenant les données pour les implémenter dans la classe produit
                         List<String> donnees =new LinkedList<>();
                         // Ajout des données
@@ -158,7 +156,11 @@ public class DAO {
                          );
                         result.add(prod); // Incrémentation du résultat.
                     }
-                 }    
+                    
+                    }
+                 }
+                 
+                     
              }
              
          }      
@@ -218,7 +220,7 @@ public class DAO {
                 PreparedStatement stmt = myConnection.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()
         ){
-            if(rs.next()){
+            while(rs.next()){
                  
                 String code = rs.getNString("code");
                 String societe = rs.getNString("societe");;
@@ -227,7 +229,7 @@ public class DAO {
                 String adresse = rs.getNString("adresse");;
                 String ville = rs.getNString("ville");;
                 String region = rs.getNString("region");;
-                int codePostal  = rs.getInt("code_postal");
+                String codePostal  = rs.getString("code_postal");
                 String pays = rs.getNString("pays");;
                 String telephone = rs.getNString("telephone");;
                 String fax = rs.getNString("fax");;

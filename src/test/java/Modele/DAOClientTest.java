@@ -68,7 +68,7 @@ public class DAOClientTest {
     @Test
     public void testGetClient() throws Exception {
         System.out.println("getClient");
-        ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","Berlin","", 12209,"Allemagne", "030-0074321" , "030-0076545");
+        ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","Berlin","", "12209","Allemagne", "030-0074321" , "030-0076545");
         ClientEntity result = this.myDAOClient.getClient();
         assertEquals(expResult.getCodeClient(), result.getCodeClient());
         assertEquals(expResult.getSocieteClient(), result.getSocieteClient());
@@ -173,32 +173,34 @@ public class DAOClientTest {
     /**
      * Test of supLineCommand method, of class DAOClient.
      * @throws java.lang.Exception
-   
+    */
     @Test
     public void testSupLineCommand() throws Exception {
         System.out.println("supLineCommand");
         int numCommand = 10248;
-        int refProduct = 3;
+        int refProduct = 11;
         DAOClient instance = this.myDAOClient;
         instance.supLineCommand(numCommand, refProduct);
         CommandeEntity result = new CommandeEntity(numCommand,119,"1995-11-13",instance.getLigne(numCommand));
-        assertEquals(1, result.getLignes().size());
-    } */
+        assertEquals(2, result.getLignes().size());
+    }
 
     /**
      * Test of modifInfoClient method, of class DAOClient.
      
+    */
     @Test
     public void testModifInfoClient() throws Exception {
         System.out.println("modifInfoClient");
-        String choixModif = "";
-        String modif = "";
-        DAOClient instance = null;
+        String choixModif = "ville";
+        String modif = "New York";
+        DAOClient instance = this.myDAOClient;
         instance.modifInfoClient(choixModif, modif);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","New York","", "12209","Allemagne", "030-0074321" , "030-0076545");
+        ClientEntity result = instance.getClient();
+        assertEquals(expResult.getVilleClient(), result.getVilleClient());
     }
-    */
+    
     public static javax.sql.DataSource getTestDataSource() {
         org.hsqldb.jdbc.JDBCDataSource ds = new org.hsqldb.jdbc.JDBCDataSource();
         ds.setDatabase("jdbc:hsqldb:mem:testcase;shutdown=true");

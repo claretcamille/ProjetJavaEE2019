@@ -20,7 +20,7 @@ public class ClientEntity {
     private String adresse;
     private String ville;
     private String region ;
-    private int codePostal ;
+    private String codePostal ;
     private String pays;
     private String telephone;
     private String fax;
@@ -39,7 +39,7 @@ public class ClientEntity {
      * @param telephoneClient 
      * @param faxClient 
      */
-    public ClientEntity(String codeClient, String societeClient , String contactClient , String fonctionClient , String adresseClient, String villeClient, String regionClient, int codePostalClient , String paysClient , String telephoneClient , String faxClient){
+    public ClientEntity(String codeClient, String societeClient , String contactClient , String fonctionClient , String adresseClient, String villeClient, String regionClient, String codePostalClient , String paysClient , String telephoneClient , String faxClient){
         this.code = codeClient;
         this.societe = societeClient;
         this.contact = contactClient;
@@ -81,7 +81,7 @@ public class ClientEntity {
         return this.region;
     }
     
-    public int getCodePostal(){
+    public String getCodePostal(){
         return this.codePostal;
     }
     
