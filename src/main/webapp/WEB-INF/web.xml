@@ -9,10 +9,5 @@
     <welcome-file-list>
         <welcome-file>firstPage.html</welcome-file>
     </welcome-file-list>
-    
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.sql.dataSource</param-name>
-        <param-value>jdbc/projetJavaEE</param-value>
-    </context-param>
         
 </web-app>
