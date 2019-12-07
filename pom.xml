@@ -113,7 +113,7 @@
                                     <version>7.0</version>
                                     <type>jar</type>
                                 </artifactItem>
-                                <!-- for Heroku, see: https://devcenter.heroku.com/articles/java-webapp-runner -->
+                                <!-- for Heroku, https://projetjavaee2019.herokuapp.com/LoginPage  -->
                                 <artifactItem>
                                     <groupId>com.github.jsimone</groupId>
                                     <artifactId>webapp-runner</artifactId>
