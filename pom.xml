@@ -59,7 +59,6 @@
             <version>10.14.1.0</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -102,12 +101,28 @@
                                     <version>7.0</version>
                                     <type>jar</type>
                                 </artifactItem>
+                                <!-- for Heroku, see: https://devcenter.heroku.com/articles/java-webapp-runner -->
+                                <artifactItem>
+                                    <groupId>com.github.jsimone</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>8.5.23.0</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
+                                </artifactItem>								
                             </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
+
+ 
 </project>
