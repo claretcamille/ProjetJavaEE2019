@@ -116,10 +116,14 @@ public class DAOAdminTest {
         System.out.println("chiffreAffCat");
         String dateDebut = "1994-08-04";
         String dateFin = "1994-10-04";
-        ChiffreAffEntity expResult = new ChiffreAffEntity("1", (float) 52892.0);
+        ChiffreAffEntity expResult = new ChiffreAffEntity("Boissons", (float) 352757.0);
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffCat(dateDebut, dateFin);
-        System.out.println(result.get(0).getInfo());
-        System.out.println(result.get(0).getChiffre());
+        if(expResult.getChiffre() ==  result.get(0).getChiffre()){
+            assertEquals(expResult.getInfo(), result.get(0).getInfo()); // Vérif info
+            assertEquals(8,result.size()); // Férification de la taille de la liste
+        }  else {
+            assertEquals(true,false);
+        }
     }
 
     /**
@@ -130,12 +134,14 @@ public class DAOAdminTest {
         System.out.println("chiffreAffPays");
         String dateDebut = "1994-08-04";
         String dateFin = "1994-10-04";
-        ChiffreAffEntity expResult = new ChiffreAffEntity("Allemagne", 4424.0F);
+        ChiffreAffEntity expResult = new ChiffreAffEntity("Allemagne", 113090.0F);
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffPays(dateDebut, dateFin);   
         if(expResult.getChiffre() ==  result.get(0).getChiffre()){
             assertEquals(expResult.getInfo(), result.get(0).getInfo()); // Vérif info
-        } 
-        assertEquals(21,result.size()); // Férification de la taille de la liste
+            assertEquals(21,result.size()); // Férification de la taille de la liste
+        }  else {
+            assertEquals(true,false);
+        }
     }
     /**
      * Test of chiffreAffClient method, of class DAOAdmin.
@@ -149,9 +155,11 @@ public class DAOAdminTest {
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffClient(dateDebut, dateFin);
         System.out.println(result.get(0).getChiffre());
         if(expResult.getChiffre() ==  result.get(0).getChiffre()){
-            assertEquals(expResult.getInfo(), result.get(0).getInfo());
-        } 
-        assertEquals(91, result.size());
+            assertEquals(expResult.getInfo(), result.get(0).getInfo()); // Vérif info
+            assertEquals(91,result.size()); // Férification de la taille de la liste
+        }  else {
+            assertEquals(true,false);
+        }
     }
      
 

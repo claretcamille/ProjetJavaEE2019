@@ -126,6 +126,30 @@ public class DAOAdmin {
             
         }
     }
+    
+    public  float calculPrix(int numCommand) throws SQLException{
+          
+         float result = 0F;
+          String sql = "Select ligne.quantite, produit.prix_unitaire from produit inner join ligne on ligne.produit = produit.reference where ligne.commande = ?";
+          
+          // Recherche de la commande dont on veut calculer le prix:
+          
+          try(Connection myConnection = this.myDAOAdmin.getConnection();
+                  PreparedStatement stmt = myConnection.prepareStatement(sql)
+                  ){
+              stmt.setInt(1, numCommand);
+              try(ResultSet rs = stmt.executeQuery()){
+                  while(rs.next()){
+                       int qt = rs.getInt(1);
+                        float prix = rs.getFloat(2);
+                        result += qt * prix;
+                         }
+                 
+                    }
+              }
+          return result;
+     }
+    
     /**
      * Fonction permettant d'avoir le chiffre d'affaire par categorie de produit en une période choisie
      * @param dateDebut
@@ -133,12 +157,9 @@ public class DAOAdmin {
      * @return la liste du chiffre d'affaire par catégorie
      */
     public List<ChiffreAffEntity> chiffreAffCat(String dateDebut, String dateFin) throws SQLException{
-       String sql1 ="SELECT   PRODUIT.CATEGORIE, PRODUIT.REFERENCE, LIGNE.QUANTITE , PRODUIT.PRIX_UNITAIRE  FROM LIGNE\n" +
-                            "INNER JOIN  COMMANDE  ON LIGNE.COMMANDE = COMMANDE.NUMERO\n" +
-                            "INNER JOIN PRODUIT ON LIGNE.PRODUIT = PRODUIT.REFERENCE\n" +
-                            "WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ?  AND  PRODUIT.CATEGORIE = ?";
+       String sql1 ="SELECT  numero  FROM COMMANDE WHERE saisie_le > ? AND  saisie_le < ? ";
        
-       String sql2 = "SELECT COUNT(DISTINCT code) FROM  CATEGORIE";
+       String sql2 = "SELECT * FROM  CATEGORIE";
        
        List<ChiffreAffEntity> result = new LinkedList<>();
        
@@ -149,22 +170,17 @@ public class DAOAdmin {
                ){
            ResultSet rs1 = stmt1.executeQuery();
            // Initialisation de la liste avec toute les catégorie
-          for(int i = 1; i < rs1.getFetchDirection()+1; i++){
-              String cat = Integer.toString(i);
-              result.add(new ChiffreAffEntity(cat,0));
-              // Mise à jour du chiffre d'affaire
-             stmt2.setString(1, dateDebut);
-             stmt2.setString(2, dateFin);
-             stmt2.setInt(3, i);
-             ResultSet rs2 = stmt2.executeQuery();
-             while(rs2.next()){
-                  // mise à jour du chiffre d'affaire
-                  float qt = rs2.getFloat("quantite");
-                  float prix = rs2.getFloat("prix_unitaire");
-                  result.get(i-1).ajoutChiffre(qt*prix);
-            }
+          while(rs1.next()){
+              int cat = rs1.getInt("code");
+              stmt2.setString(1, dateDebut);
+              stmt2.setString(2, dateFin);
+               ResultSet rs2 = stmt2.executeQuery();
+               float prixCat = 0F;
+               while(rs2.next()){
+                   prixCat +=  this.calculPrix(rs2.getInt(1));
+               }
+               result.add(new ChiffreAffEntity(rs1.getString("libelle"), prixCat));
           }
-          
        }
         return result;
     }
@@ -176,7 +192,7 @@ public class DAOAdmin {
      * @return a liste du chiffre d'affaire par pays
      */
     public List<ChiffreAffEntity> chiffreAffPays( String dateDebut, String dateFin) throws SQLException{
-        String sql1 ="SELECT  port  FROM COMMANDE WHERE saisie_le > ? AND  saisie_le < ?  AND pays_livraison= ?";
+        String sql1 ="SELECT  numero  FROM COMMANDE WHERE saisie_le > ? AND  saisie_le < ?  AND pays_livraison= ?";
         
         String sql2 = "SELECT DISTINCT pays FROM CLIENT";
         
@@ -201,7 +217,7 @@ public class DAOAdmin {
              stmt2.setString(3, info);
              ResultSet rs2 = stmt2.executeQuery(); 
              while(rs2.next()){
-                 result.get(index).ajoutChiffre(rs2.getFloat("port"));
+                 result.get(index).ajoutChiffre(this.calculPrix(rs2.getInt(1)));
              }
              index++;
           }
@@ -218,7 +234,7 @@ public class DAOAdmin {
      * @return a liste du chiffre d'affaire par client
      */
     public List<ChiffreAffEntity> chiffreAffClient ( String dateDebut, String dateFin) throws SQLException{
-        String sql1 =" SELECT port FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ? AND client = ?";
+        String sql1 =" SELECT numero FROM COMMANDE WHERE COMMANDE.SAISIE_LE > ? AND  COMMANDE.SAISIE_LE < ? AND client = ?";
         
         String sql2 = "SELECT code FROM CLIENT";
         
@@ -245,7 +261,7 @@ public class DAOAdmin {
               stmt2.setString(3, info);
               ResultSet rs2 = stmt2.executeQuery();
               while(rs2.next()){
-                     result.get(index).ajoutChiffre(rs2.getFloat("port"));
+                     result.get(index).ajoutChiffre(this.calculPrix(rs2.getInt("numero")));
               }
               index++;
            } 
