@@ -39,7 +39,7 @@ public class ListeCommandeClientServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String clientCode = request.getParameter("client");
+        String clientCode = request.getParameter("clientCode");
         Properties resultat = new Properties();
         try{
             DAOClient daoC = new DAOClient(DataSourceFactory.getDataSource(), clientCode);

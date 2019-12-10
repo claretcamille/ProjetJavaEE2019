@@ -16,17 +16,18 @@
 		
 			// Afficher les clients dans l'état sélectionné
 			function showCommands() {
-					
+                                                                                        var select = "ALFKI";
 				// On fait un appel AJAX pour chercher les clients de cet état
 				$.ajax({
 					url: "ListeCommandeClientServlet",
 					dataType: "json",
+                                                                                                              data: { "clientCode" : "ALFKI"},
 					success: // La fonction qui traite les résultats
 						function(result) {
 							// Le code source du template est dans la page
 							var template = $('#commandesTemplate').html();
 							// On combine le template avec le résultat de la requête
-							var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
+							var processedTemplate = Mustache.to_html(template, { clientCode: select, records: result.records });
 							// On affiche le résultat dans la page
 							$('#commandes').html(processedTemplate);	
 						},
@@ -39,12 +40,12 @@
 			alert("Erreur: " + status + " : " + message);
 		}
         </script>
-        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
         <div>
-            <a id="connexion" href="../firstPage.html">Deconnection</a>
-            <a id="connexion" href="../FirstPageClient.html">Page Acceuil</a>
+            <a id="connexion" href="firstPage.html">Deconnection</a>
+            <a id="connexion" href="FirstPageClient.html">Page Acceuil</a>
             <a id="connexion" href="MesInfos.html">Mes Infos</a>
             <br>
             <h1> Affichage des produit disponible : </h1>
