@@ -49,7 +49,7 @@
             <br>
             <h1> Affichage des produit disponible : </h1>
             <h2>Veuillez selectionner par categorie.</h2>
-            <a href="ListeCommandeClientServlet?clientCode=ALFKI"> Liste commandes</a>
+            <a href="../LoginPage"> Menu commande</a>
             
         </div>
         
@@ -64,9 +64,9 @@
                  {{! Pour chaque enregistrement }}
                  {{#records}}
                      <TR>
-                         <TD>{{numero}}</TD>
-                         <TD>{{port}}</TD>
-                         <TD>{{saisieLe}}</TD> 
+                         <TD>{{records.getnum()}}</TD>
+                         <TD>{{records.getPort()}}</TD>
+                         <TD>{{records.getSaisieLe()}}</TD> 
                          <TD><a href="MesLigneCommande.html"> Voir la totalité<a></TD>
                      </TR>
                  {{/records}}
