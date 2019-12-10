@@ -13,9 +13,9 @@
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
-        <div style="color:red">${errorMessage}</div>
         <h1> Bienvenue sur la page de connexion </h1>
         <form  id="login" action="LoginPage" method="POST">
+            <div style="color:red">${errorMessage}</div>
             login : <input name='loginParam'><br>
             password : <input name='passwordParam' type='password'><br>
             <input id ="valide"type='submit' name='action' value='login'>

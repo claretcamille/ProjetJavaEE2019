@@ -47,16 +47,19 @@ public class LoginPage extends HttpServlet {
 		// On cherche l'attribut userName dans la session
 		String userName = findUserInSession(request);
 		String jspView;
-		if (null == userName) { // L'utilisateur n'est pas connecté
+		if (null == userName)
+                { // L'utilisateur n'est pas connecté
 			// On choisit la page de login
 			jspView = "login.jsp";
-
-	
-		} else if(userName.equals("admin")){
-                                                                 jspView = "FirstPageAdmin.html";
-                                            } else{
-                                                        jspView = "FirstPageClient.html";
-                                                    }
+		}
+                else if(userName.equals("admin") == true)
+                {
+                    jspView = "FirstPageAdmin.html";
+                }
+                else
+                {
+                    jspView = "FirstPageClient.html";
+                }
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
 
@@ -113,7 +116,15 @@ public class LoginPage extends HttpServlet {
 		// Les paramètres transmis dans la requête
 		String loginParam = request.getParameter("loginParam");
 		String passwordParam = request.getParameter("passwordParam");
-
+                
+                if(loginParam.equals("admin") && passwordParam.equals("admin"))
+                {
+                    HttpSession session = request.getSession(true); // démarre la session
+                    session.setAttribute("userName", "admin");
+                }
+                else
+                {
+                    try{
 		// Le login/password défini dans web.xml
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
                 DAOClient daoC = dao.toConnectClient(loginParam, passwordParam);
@@ -128,15 +139,15 @@ public class LoginPage extends HttpServlet {
                             // On stocke l'information dans la session
                             HttpSession session = request.getSession(true); // démarre la session
                             session.setAttribute("userName", userName);
-                        }else if(loginParam.equals(loginParam) && loginParam.equals("admin") )
-                        { // alors l'utilisateur est peut-être un administrateur
-                            HttpSession session = request.getSession(true); // démarre la session
-                            request.setAttribute("errorMessage", "admin");
-                        }else{
-                            // On positionne un message d'erreur pour l'afficher dans la JSP
-                            request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
                         }
-	}
+                    }
+                    catch(NullPointerException e)
+                    {
+                        // On positionne un message d'erreur pour l'afficher dans la JSP
+                        request.setAttribute("errorMessage", "Login / Password incorrect ! Veuillez essayer de nouveau");
+                    }
+                }
+        }
 
 	private void doLogout(HttpServletRequest request) {
 		// On termine la session
@@ -148,6 +159,18 @@ public class LoginPage extends HttpServlet {
 
 	private String findUserInSession(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
-		return (session == null) ? null : (String) session.getAttribute("userName");
+                if(session == null)
+                {
+                    return null;
+                }
+                else if("admin".equals((String) session.getAttribute("userName")) == true)
+                {
+                    return "admin";
+                }
+                else
+                {
+                    return (String) session.getAttribute("userName");
+                }
+		//return (session == null) ? null : (String) session.getAttribute("userName");
 	}
 }
