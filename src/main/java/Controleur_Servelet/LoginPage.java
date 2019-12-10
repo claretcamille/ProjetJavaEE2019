@@ -21,6 +21,7 @@ import Modele.DAOClient;
 import Modele.ClientEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -55,10 +56,14 @@ public class LoginPage extends HttpServlet {
                 else if(userName.equals("admin") == true)
                 {
                     jspView = "FirstPageAdmin.html";
+                    Cookie ck=new Cookie("code",userName);  
+                    response.addCookie(ck);  
                 }
                 else
                 {
-                    jspView = "FirstPageClient.html";
+                    Cookie ck=new Cookie("code",userName);  
+                    response.addCookie(ck);  
+                    jspView = "FirstPageClient.html?";
                 }
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
@@ -131,7 +136,7 @@ public class LoginPage extends HttpServlet {
                 ClientEntity Clients = daoC.getClient();
                     String login = Clients.getContactClient();
                     String password = Clients.getCodeClient();
-                    String userName = Clients.getContactClient();
+                    String userName = Clients.getCodeClient();
                 
                     if ((login.equals(loginParam) && (password.equals(passwordParam))))
                         {

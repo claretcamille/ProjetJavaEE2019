@@ -16,18 +16,17 @@
 		
 			// Afficher les clients dans l'état sélectionné
 			function showCommands() {
-                                                                                        var select = "ALFKI";
+                                                                                        var select = $("#clientCode").val();
 				// On fait un appel AJAX pour chercher les clients de cet état
 				$.ajax({
 					url: "ListeCommandeClientServlet",
 					dataType: "json",
-                                                                                                              data: { "clientCode" : "ALFKI"},
 					success: // La fonction qui traite les résultats
 						function(result) {
 							// Le code source du template est dans la page
 							var template = $('#commandesTemplate').html();
 							// On combine le template avec le résultat de la requête
-							var processedTemplate = Mustache.to_html(template, { clientCode: select, records: result.records });
+							var processedTemplate = Mustache.to_html(template, result);
 							// On affiche le résultat dans la page
 							$('#commandes').html(processedTemplate);	
 						},
@@ -50,7 +49,6 @@
             <br>
             <h1> Affichage des produit disponible : </h1>
             <h2>Veuillez selectionner par categorie.</h2>
-            <a href="ListeCommandeClientServlet?clientCode=ALFKI"> Liste commandes</a>
             
         </div>
         
@@ -60,6 +58,7 @@
             <div id="commandes"></div>
             <!-- Le template qui sert à formatter la liste des clients résultats-->
             <script id="commandesTemplate" type="text/template">
+                
                 <TABLE>
                  <tr> <th>Numéro</th> <th>Prix</th> <th>Data de saisie</th> <th>Contenue</th> </tr>
                  {{! Pour chaque enregistrement }}

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +36,10 @@ public class logout extends HttpServlet {
                 HttpSession session = request.getSession(false);
 		if (session != null) {
 			session.invalidate();
+                                                                  Cookie ck=new Cookie("code","");  
+                                                                    ck.setMaxAge(0);  
+                                                                    response.addCookie(ck);  
+                                                                  
 		}
         request.getRequestDispatcher("firstPage.html").forward(request, response);
         }

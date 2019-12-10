@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +40,8 @@ public class ListeCommandeClientServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String clientCode = request.getParameter("clientCode");
+        Cookie ck[]=request.getCookies();
+        String clientCode=ck[0].getValue();
         Properties resultat = new Properties();
         try{
             DAOClient daoC = new DAOClient(DataSourceFactory.getDataSource(), clientCode);
