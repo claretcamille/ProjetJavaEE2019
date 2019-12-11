@@ -35,7 +35,7 @@ public final class DAOClient {
     public DAOClient(DataSource dao, String Code) throws SQLException{
         this.myDAOClient =  dao;
         this.setCodeClient(Code);
-        this.client = this.getClient();
+        this.client = this.getClient().get(0);
         
     }
     
@@ -56,9 +56,10 @@ public final class DAOClient {
     public void setCodeClient(String code){
         this.codeClient = code;
     }
+   
     
-    public ClientEntity getClient() throws SQLException {
-        ClientEntity result = null;
+    public List<ClientEntity> getClient() throws SQLException {
+       List<ClientEntity>  result = new LinkedList<>();
         String sql = "SELECT * FROM CLIENT WHERE code = '"+this.codeClient+"'";
         try(
                 Connection myConnection = this.myDAOClient.getConnection();
@@ -79,7 +80,7 @@ public final class DAOClient {
                 donnees.add(rs.getString("telephone"));
                 donnees.add(rs.getString("fax"));
                 // Implémentation du produit
-                result = new ClientEntity(
+                result.add(new ClientEntity(
                         donnees.get(0), // code du Client
                         donnees.get(1), // societe du Client
                         donnees.get(2), // contact du Client
@@ -91,7 +92,8 @@ public final class DAOClient {
                         donnees.get(7), // pays du Client
                         donnees.get(8), // telephone du Client
                         donnees.get(9) // fax du Client
-                 );
+                 ));
+                
                
             }
             
@@ -284,7 +286,7 @@ public final class DAOClient {
                 stmt.setInt(3, qt);
                 stmt.executeUpdate();
                 myConnection.commit(); // Validation de la transaction
-                this.client = this.getClient(); // Mise a jour du client 
+                this.client = this.getClient().get(0); // Mise a jour du client 
             }catch (SQLException ex) {
                 Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
                // throw new DAOException(ex.getMessage());
@@ -343,7 +345,7 @@ public final class DAOClient {
                 stmt.executeUpdate();
                 
                 myConnection.commit(); // Validation de la transaction
-                this.client = this.getClient(); // Mise a jour du client 
+                this.client = this.getClient().get(0); // Mise a jour du client 
             }catch (SQLException ex) {
                 Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
                // throw new DAOException(ex.getMessage());

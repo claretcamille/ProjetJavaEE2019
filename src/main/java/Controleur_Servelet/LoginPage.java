@@ -133,7 +133,7 @@ public class LoginPage extends HttpServlet {
 		// Le login/password défini dans web.xml
                 DAO dao = new DAO(DataSourceFactory.getDataSource());
                 DAOClient daoC = dao.toConnectClient(loginParam, passwordParam);
-                ClientEntity Clients = daoC.getClient();
+                ClientEntity Clients = daoC.getClient().get(0);
                     String login = Clients.getContactClient();
                     String password = Clients.getCodeClient();
                     String userName = Clients.getCodeClient();

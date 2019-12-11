@@ -69,7 +69,7 @@ public class DAOClientTest {
     public void testGetClient() throws Exception {
         System.out.println("getClient");
         ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","Berlin","", "12209","Allemagne", "030-0074321" , "030-0076545");
-        ClientEntity result = this.myDAOClient.getClient();
+        ClientEntity result = this.myDAOClient.getClient().get(0);
         assertEquals(expResult.getCodeClient(), result.getCodeClient());
         assertEquals(expResult.getSocieteClient(), result.getSocieteClient());
     }
@@ -197,7 +197,7 @@ public class DAOClientTest {
         DAOClient instance = this.myDAOClient;
         instance.modifInfoClient(choixModif, modif);
         ClientEntity expResult =  new ClientEntity("ALFKI","Alfreds Futterkiste", "Maria Anders" , "Représentant(e)" , "Obere Str. 57","New York","", "12209","Allemagne", "030-0074321" , "030-0076545");
-        ClientEntity result = instance.getClient();
+        ClientEntity result = instance.getClient().get(0);
         assertEquals(expResult.getVilleClient(), result.getVilleClient());
     }
     
