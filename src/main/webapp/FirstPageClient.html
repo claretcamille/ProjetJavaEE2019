@@ -37,27 +37,6 @@
 				});								
 			}
 		
-			// Afficher les clients dans l'état sélectionné
-			function showProductInCategorie() {
-				// Quel est l'état sélectionné ?
-				var selectedCategorie = $("#categorie").val();	
-				// On fait un appel AJAX pour chercher les clients de cet état
-				$.ajax({
-					url: "ListeProduitCategorieServlet",
-					data: { "categorie" : selectedCategorie },
-					dataType: "json",
-					success: // La fonction qui traite les résultats
-						function(result) {
-							// Le code source du template est dans la page
-							var template = $('#productTemplate').html();
-							// On combine le template avec le résultat de la requête
-							var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
-							// On affiche le résultat dans la page
-							$('#product').html(processedTemplate);	
-						},
-					error: showError
-				});				
-			}
 
 		// Fonction qui traite les erreurs de la requête
 		function showError(xhr, status, message) {
@@ -70,7 +49,7 @@
         <div>
             <a id="connexion" href="logout">Deconnexion</a>
             <a id="connexion" href="MesCommandes.html">Mes Commandes</a>
-            <a id="connexion" href="VueClient/MesInfos.html">Mes Infos</a>
+            <a id="connexion" href="MesInfos.html">Mes Infos</a>
             <br>
             <h1> Affichage des produit disponible : </h1>
             <h2>Veuillez selectionner par categorie.</h2>

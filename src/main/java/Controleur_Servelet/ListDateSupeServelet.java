@@ -5,8 +5,7 @@
  */
 package Controleur_Servelet;
 
-import Modele.CategorieEntity;
-import Modele.DAO;
+import Modele.DAOAdmin;
 import Modele.DataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
@@ -27,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author loicleu
  */
-@WebServlet(name = "CategorieListServelet", urlPatterns = {"/CategorieListServelet"})
-public class CategorieListServelet extends HttpServlet {
+@WebServlet(name = "ListDateSupeServelet", urlPatterns = {"/ListDateSupeServelet"})
+public class ListDateSupeServelet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,19 +39,19 @@ public class CategorieListServelet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        DAO dao = new DAO(DataSourceFactory.getDataSource());
-        Properties resultat= new Properties();
-        
+        DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
+        String dateD = request.getParameter("dateD");
+        Properties resultat = new Properties();
         try{
-            List<CategorieEntity> cat = dao.getCategorie();
-            String libelle[];
-            libelle = new  String[cat.size()];
-            for(int i = 0; i < cat.size();i++){
-                 libelle[i] = cat.get(i).getLibelle();
-            }
-            resultat.put("records", libelle);
-        } catch (SQLException ex) {
+            List<String> date = daoA.dateSelection();
+            int index = date.indexOf(dateD);
+            int sup = 0;
+            while(sup <= index){
+                date.remove(0);
+                sup++;
+            };
+            resultat.put("records",date);
+        }catch(SQLException ex){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);
             resultat.put("message", ex.getMessage());
@@ -66,6 +64,7 @@ public class CategorieListServelet extends HttpServlet {
             out.println(gson.toJson(resultat));
         }
     }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

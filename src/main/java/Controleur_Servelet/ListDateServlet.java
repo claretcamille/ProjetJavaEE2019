@@ -5,8 +5,7 @@
  */
 package Controleur_Servelet;
 
-import Modele.CategorieEntity;
-import Modele.DAO;
+import Modele.DAOAdmin;
 import Modele.DataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
@@ -25,10 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author loicleu
+ * @author camilleclaret
  */
-@WebServlet(name = "CategorieListServelet", urlPatterns = {"/CategorieListServelet"})
-public class CategorieListServelet extends HttpServlet {
+@WebServlet(name = "ListDateServlet", urlPatterns = {"/ListDateServlet"})
+public class ListDateServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,19 +39,13 @@ public class CategorieListServelet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
         
-        DAO dao = new DAO(DataSourceFactory.getDataSource());
-        Properties resultat= new Properties();
-        
+        Properties resultat = new Properties();
         try{
-            List<CategorieEntity> cat = dao.getCategorie();
-            String libelle[];
-            libelle = new  String[cat.size()];
-            for(int i = 0; i < cat.size();i++){
-                 libelle[i] = cat.get(i).getLibelle();
-            }
-            resultat.put("records", libelle);
-        } catch (SQLException ex) {
+            List<String> date = daoA.dateSelection();
+            resultat.put("records", date.remove(date.size()));// Evite de ne pas avoir deux date valable
+        }catch(SQLException ex){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);
             resultat.put("message", ex.getMessage());
