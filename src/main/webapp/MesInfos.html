@@ -10,12 +10,12 @@
 		<script>
 			$(document).ready(// Exécuté à la fin du chargement de la page
 				function () {
-					showCommands();
+					showInfo();
 				}
 			);
 		
 			// Afficher les clients dans l'état sélectionné
-			function showCommands() {
+			function showInfo() {
 				// On fait un appel AJAX pour chercher les clients de cet état
 				$.ajax({
 					url: "ListeInfoClientServelet",
@@ -61,7 +61,7 @@
                 <tr><th>Info sur la societe : {{societe}}</th><th>Contact de la Societe</th></tr>
                     {{#records}}
                     <tr> <td>
-                    <form   action="adresse" method="POST">
+                    <form   action="ListeInfoClientServelet" method="POST">
                     Adresse :  <input name='adresse' value={{adresse}}><br>
                     Ville:  <input name='ville' value={{ville}}><br>
                     Code Postal:  <input name='code' value={{codePostal}}><br>
@@ -70,12 +70,12 @@
                     </form></td>
                     
                     <td>
-                    <form    action="contact" method="POST">
+                    <form    action="ListeInfoClientServelet" method="POST">
                     Contact de la scociete : <input name='contact' value={{contact}}><br>
                     Fonction du contact :  <input name='fonction' value={{fonction}}><br>
                     Tel :  <input name='tel' value={{telephone}}><br>
                     Faxe :  <input name='faxe' value={{fax}}><br>
-                    <input id ="valide" type='submit' name='action' value= "ModifConctact">
+                    <input id ="valide" type='submit' name='action' value= "ModifContact">
                     </form></td>
                     </tr>
                     {{/records}}
