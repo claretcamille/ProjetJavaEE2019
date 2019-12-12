@@ -101,38 +101,8 @@
     <body>
         <div>
             <a id="connexion" href="logout">Deconnection</a>
-            <br>
-            <h1> Affichage des produit disponible : </h1>
-            <h2>Veuillez selectionner par categorie.</h2>
+            <a id="connexion" href="GestionAdmin.html">Gestion des produits</a>
+            <a id="connexion" href="Statistiques.html">Statisques</a>
         </div>
-        
-        <div id="erreur"></div>
-        <form>
-            <label for="dateD">Choix de la date de début : </label>
-            <select id="dateD"></select>
-        </form>
-        <br>
-        <form>
-            <label for="dateF">Choix de la date de fin : </label>
-            <select id="dateF"></select>
-        </form>
-
-        <!-- Le template qui sert à formatter la liste des clients résultats -->
-        <script id="dateDTemplate" type="text/template">
-            {{! Pour chaque état dans le tableau}}
-            {{#records}}
-                {{! Une option dans le select }}
-                {{! le point représente la valeur courante du tableau }}
-                <OPTION VALUE="{{.}}">{{.}}</OPTION>
-            {{/records}}
-        </script>
-        <script id="dateFTemplate" type="text/template">
-            {{! Pour chaque état dans le tableau}}
-            {{#records}}
-                {{! Une option dans le select }}
-                {{! le point représente la valeur courante du tableau }}
-                <OPTION VALUE="{{.}}">{{.}}</OPTION>
-            {{/records}}
-        </script>
     </body>
 </html>
