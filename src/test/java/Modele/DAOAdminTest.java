@@ -87,7 +87,7 @@ public class DAOAdminTest {
         DAOAdmin instance = this.myDAOAdmin;
         instance.suppProduct(reference);
         List<ProductEntity> result = instance.getDAO().allProduct();
-       assertEquals(68, result.size()); // vérif qu'il manque un produit
+        assertEquals(68, result.size()); // vérif qu'il manque un produit
        
     }
    

@@ -1,42 +1,46 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Mes Infos</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<!-- On charge la bibliothèque JQuery -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<!-- On charge le moteur de template mustache https://mustache.github.io/ -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
-		<script>
-			$(document).ready(// Exécuté à la fin du chargement de la page
-				function () {
-					showInfo();
-				}
-			);
+<html><head>
+        <title>Mes Infos</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- On charge la bibliothèque JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<!-- On charge le moteur de template mustache https://mustache.github.io/ -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
+	<script>
+			$(document).ready(
+                                // Exécuté à la fin du chargement de la page
+				function ()
+                                {
+                                    showInfo();
+				});
 		
 			// Afficher les clients dans l'état sélectionné
-			function showInfo() {
-				// On fait un appel AJAX pour chercher les clients de cet état
-				$.ajax({
-					url: "ListeInfoClientServelet",
-					dataType: "json",
-					success: // La fonction qui traite les résultats
-						function(result) {
-							// Le code source du template est dans la page
-							var template = $('#infosTemplate').html();
-							// On combine le template avec le résultat de la requête
-							var processedTemplate = Mustache.to_html(template, result);
-							// On affiche le résultat dans la page
-							$('#infos').html(processedTemplate);	
-						},
-					error: showError
-				});				
+			function showInfo()
+                        {
+                            // On fait un appel AJAX pour chercher les clients de cet état
+                            $.ajax({
+                                url: "ListeInfoClientServelet",
+                                dataType: "json",
+                                success: 
+                                        // La fonction qui traite les résultats
+                                        function(result)
+                                        {
+                                            // Le code source du template est dans la page
+                                            var template = $('#infosTemplate').html();
+                                            // On combine le template avec le résultat de la requête
+                                            var processedTemplate = Mustache.to_html(template, result);
+                                            // On affiche le résultat dans la page
+                                            $('#infos').html(processedTemplate);
+                                        },
+                                        error: showError
+                                    });				
 			}
 
-		// Fonction qui traite les erreurs de la requête
-		function showError(xhr, status, message) {
-			alert("Erreur: " + status + " : " + message);
-		}
+                        // Fonction qui traite les erreurs de la requête
+                        function showError(xhr, status, message)
+                        {
+                            alert("Erreur: " + status + " : " + message);
+                        }
         </script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
@@ -47,16 +51,11 @@
             <a id="connexion" href="MesCommandes.html">Commandes</a>
             <br>
             <h1> Mes informations :</h1>
-            
         </div>
-        
-        
-
-            <!-- La zone où les résultats vont s'afficher -->
-            <div id="infos"></div>
-            <!-- Le template qui sert à formatter la liste des clients résultats-->
-                
-            <script id="infosTemplate" type="text/template">
+        <!-- La zone où les résultats vont s'afficher -->
+        <div id="infos"></div>
+        <!-- Le template qui sert à formatter la liste des clients résultats-->
+        <script id="infosTemplate" type="text/template">
                 <table>
                 <tr><th>Info sur la societe : {{societe}}</th><th>Contact de la Societe</th></tr>
                     {{#records}}
@@ -80,8 +79,6 @@
                     </tr>
                     {{/records}}
                 </table>
-            </script> 
-
-   
+        </script>
     </body>
 </html>

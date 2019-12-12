@@ -62,7 +62,7 @@ public class CategorieListServelet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             // On spécifie que la servlet va générer du JSON
             response.setContentType("application/json;charset=UTF-8");
-           Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             out.println(gson.toJson(resultat));
         }
     }

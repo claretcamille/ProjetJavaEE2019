@@ -46,6 +46,7 @@ public class CreateDataBase implements ServletContextListener {
         }
         return result;
     }
+    
     private void initializeDatabase() {
         OutputStream nowhere = new OutputStream() {
             @Override

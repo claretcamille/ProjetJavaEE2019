@@ -33,15 +33,18 @@ public class LoginPage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException, SQLException {
 		String action = request.getParameter("action");
-		if (null != action) {
-			switch (action) {
-				case "login":
-					checkLogin(request);
-					break;
-				case "logout":
-					doLogout(request);
-					break;
-			}
+		if (null != action)
+                {
+                    switch (action)
+                    {
+                        case "login":
+                            checkLogin(request);
+                            break;
+                            
+                        case "logout":
+                            doLogout(request);
+                            break;
+                    }
 		}
 
 		// Est-ce que l'utilisateur est connecté ?
@@ -49,7 +52,8 @@ public class LoginPage extends HttpServlet {
 		String userName = findUserInSession(request);
 		String jspView;
 		if (null == userName)
-                { // L'utilisateur n'est pas connecté
+                {
+                        // L'utilisateur n'est pas connecté
 			// On choisit la page de login
 			jspView = "login.jsp";
 		}
@@ -60,10 +64,10 @@ public class LoginPage extends HttpServlet {
                     response.addCookie(ck);  
                 }
                 else
-                {
-                    Cookie ck=new Cookie("code",userName);  
-                    response.addCookie(ck);  
+                { 
                     jspView = "FirstPageClient.html?";
+                    Cookie ck=new Cookie("code",userName);  
+                    response.addCookie(ck); 
                 }
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
@@ -130,15 +134,15 @@ public class LoginPage extends HttpServlet {
                 else
                 {
                     try{
-		// Le login/password défini dans web.xml
-                DAO dao = new DAO(DataSourceFactory.getDataSource());
-                DAOClient daoC = dao.toConnectClient(loginParam, passwordParam);
-                ClientEntity Clients = daoC.getClient().get(0);
-                    String login = Clients.getContactClient();
-                    String password = Clients.getCodeClient();
-                    String userName = Clients.getCodeClient();
+                        // Le login/password défini dans web.xml
+                        DAO dao = new DAO(DataSourceFactory.getDataSource());
+                        DAOClient daoC = dao.toConnectClient(loginParam, passwordParam);
+                        ClientEntity Clients = daoC.getClient().get(0);
+                        String login = Clients.getContactClient();
+                        String password = Clients.getCodeClient();
+                        String userName = Clients.getCodeClient();
                 
-                    if ((login.equals(loginParam) && (password.equals(passwordParam))))
+                        if ((login.equals(loginParam) && (password.equals(passwordParam))))
                         {
                             // On a trouvé la combinaison login / password
                             // On stocke l'information dans la session
@@ -157,8 +161,9 @@ public class LoginPage extends HttpServlet {
 	private void doLogout(HttpServletRequest request) {
 		// On termine la session
 		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
+		if (session != null)
+                {
+                    session.invalidate();
 		}
 	}
 

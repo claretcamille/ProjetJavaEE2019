@@ -34,14 +34,14 @@ public class logout extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
                 HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
-                                                                  Cookie ck=new Cookie("code","");  
-                                                                    ck.setMaxAge(0);  
-                                                                    response.addCookie(ck);  
-                                                                  
-		}
-        request.getRequestDispatcher("firstPage.html").forward(request, response);
+		if (session != null)
+                {
+                    session.invalidate();
+                    Cookie ck=new Cookie("code","");
+                    ck.setMaxAge(0);
+                    response.addCookie(ck);
+                }
+                request.getRequestDispatcher("firstPage.html").forward(request, response);
         }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
