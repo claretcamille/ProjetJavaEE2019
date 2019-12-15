@@ -5,6 +5,7 @@
  */
 package Controleur_Servelet;
 
+import Modele.ChiffreAffEntity;
 import Modele.DAOAdmin;
 import Modele.DataSourceFactory;
 import com.google.gson.Gson;
@@ -13,7 +14,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,11 +45,12 @@ public class VenteParClientServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
-        String DateDebut = request.getParameter("dateD");
-        String DateFin = request.getParameter("dateF");
         Properties resultat = new Properties();
         try{
-            resultat.put("records", daoA.chiffreAffClient(DateDebut, DateFin));
+            String dateDebut = request.getParameter("dateD");
+            String dateFin = request.getParameter("dateF");
+             resultat.put("records", daoA.chiffreAffClientMap(dateDebut, dateFin));
+            
         }catch(SQLException ex){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);

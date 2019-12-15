@@ -43,7 +43,7 @@ public class VenteParPaysServelet extends HttpServlet {
         String DateFin = request.getParameter("dateF");
         Properties resultat = new Properties();
         try{
-            resultat.put("records", daoA.chiffreAffPays(DateDebut, DateFin));
+            resultat.put("records", daoA.chiffreAffPaysMap(DateDebut, DateFin));
         }catch(SQLException ex){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);

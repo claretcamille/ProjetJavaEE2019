@@ -1,107 +1,118 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Admin</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Produit</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!-- On charge la bibliothèque JQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<!-- On charge le moteur de template mustache https://mustache.github.io/ -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script>
 			$(document).ready(
-                            // Exécuté à la fin du chargement de la page
-                            function ()
-                            {
-                                // On remplit le <select> avec les états existants
-                                fillCDateDSelector();
-                                $("#dateD").change(fillCDateFSelector);
-                                // Quand on sélectionnne un nouvel état, on affiche les clients de cet état
-                            });
+                                // Exécuté à la fin du chargement de la page
+				function ()
+                                {
+                                    // On remplit le <select> avec les états existants
+                                    fillCategorySelector();
+                                    // Quand on sélectionnne un nouvel état, on affiche les clients de cet état
+                                    $("#categorie").change(showProductInCategorie);
+				});
 			
-			 function fillCDateDSelector()
-                         {
-                             // On fait un appel AJAX pour chercher les états existants
+			function fillCategorySelector()
+                        {
+                            // On fait un appel AJAX pour chercher les états existants
                             $.ajax({
-                                url: "ListDateServlet",
-                                dataType: "json",
+                                url: "CategorieListServelet",
                                 error: showError,
+                                success: // La fonction qui traite les résultats
+                                function(result)
+                                {
+                                    // Le code source du template est dans la page
+                                    var template = $('#selectTemplate').html();
+                                    // On combine le template avec le résultat de la requête
+                                    var processedTemplate = Mustache.to_html(template, result);
+                                    // On affiche la liste des options dans le select
+                                    $('#categorie').html(processedTemplate);
+                                    // On initialise l'affichage des clients
+                                    showProductInCategorie();
+                                }
+				});								
+			}
+                        
+                        function showProductInCategorie()
+                        {
+                            // Quel est l'état sélectionné ?
+                            var selectedCategorie = $("#categorie").val();
+                            // On fait un appel AJAX pour chercher les clients de cet état
+                            $.ajax({
+                                url: "ListeProduitCategorieServlet",
+                                data: { "categorie" : selectedCategorie },
+                                dataType: "json",
                                 success:
                                         // La fonction qui traite les résultats
                                         function(result)
                                         {
                                             // Le code source du template est dans la page
-                                            var template = $('#dateDTemplate').html();
+                                            var template = $('#productTemplate').html();
                                             // On combine le template avec le résultat de la requête
-                                            var processedTemplate = Mustache.to_html(template, result);
-                                            // On affiche la liste des options dans le select
-                                            $('#dateD').html(processedTemplate);	
-                                            // On initialise l'affichage des clients
-                                            fillCDateFSelector();		
-					}
-				});								
-                            }
-                                                                 
-                            function fillCDateFSelector()
-                            {
-                                var selectedDate = $("#dateD").val();
-				// On fait un appel AJAX pour chercher les états existants
-				$.ajax({
-                                    url: "ListDateSupeServelet",
-                                    dataType: "json",
-                                    data: { "dateD" : selectedDate },
-                                    error: showError,
-                                    success: 
-                                            // La fonction qui traite les résultats
-                                            function(result) 
-                                            {
-                                                // Le code source du template est dans la page
-						var template = $('#dateFTemplate').html();
-						// On combine le template avec le résultat de la requête
-						var processedTemplate = Mustache.to_html(template, { dateD: selectedDate, records: result.records });
-						// On affiche la liste des options dans le select
-						$('#dateF').html(processedTemplate);		
-                                            }
-                                        });								
-                            }
+                                            var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
+                                            // On affiche le résultat dans la page
+                                            $('#product').html(processedTemplate);
+                                        },
+                                        error: showError
+                                    });				
+			}
 		
-                            // Afficher les clients dans l'état sélectionné
-                            function showAffClie()
-                            {
-                                // Quel est l'état sélectionné ?
-				var selectedCategorie = $("#categorie").val();	
-				// On fait un appel AJAX pour chercher les clients de cet état
-				$.ajax({
-                                    url: "ListeProduitCategorieServlet",
-                                    data: { "categorie" : selectedCategorie },
-                                    dataType: "json",
-                                    success: 
-                                            // La fonction qui traite les résultats
-                                            function(result)
-                                            {
-                                                // Le code source du template est dans la page
-						var template = $('#productTemplate').html();
-						// On combine le template avec le résultat de la requête
-						var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
-						// On affiche le résultat dans la page
-						$('#product').html(processedTemplate);	
-                                            },
-                                    error: showError
-                                        });				
-                            }
 
-                            // Fonction qui traite les erreurs de la requête
-                            function showError(xhr, status, message)
-                            {
-                                alert("Erreur: " + status + " : " + message);
-                            }
+                        // Fonction qui traite les erreurs de la requête
+                        function showError(xhr, status, message)
+                        {
+                            alert("Erreur: " + status + " : " + message);
+                        }
         </script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
         <div>
-            <a id="connexion" href="logout">Deconnection</a>
-            <a id="connexion" href="Statistiques.html">Statisques</a>
+            <a id="connexion" href="logout">Deconnexion</a>
+            <a id="connexion" href="FirstPageAdmin.html">Retour</a>
+            <br>
+            <h1> Affichage des produit disponible : </h1>
+            <h2>Veuillez selectionner par categorie.</h2>
         </div>
+        <div id="erreur"></div>
+        <form>
+            <label for="categorie">Choix de la catégorie : </label>
+            <select id="categorie"></select>
+        </form>
+        <br>
+        <!-- La zone où les résultats vont s'afficher -->
+        <div id="product"></div>
+        <!-- Le template qui sert à formatter la liste des clients résultats-->
+        <script id="productTemplate" type="text/template">
+                <TABLE>
+                 <tr> <th>Références</th> <th>Nom</th> <th>Quantité</th> <th>Prix</th>  </tr>
+                 {{! Pour chaque enregistrement }}
+                 {{#records}}
+                     <TR>
+                         <TD>{{ref}}</TD>
+                         <TD>{{nom}}</TD>
+                         <TD>{{quantite}}</TD> 
+                         <TD>{{prix}}</TD>
+                         <TD><a>supprimer</a></TD>
+                     </TR>
+                 {{/records}}
+              </TABLE>  
+        </script>
+        
+        <!-- Le template qui sert à formatter la liste des clients résultats -->
+        <script id="selectTemplate" type="text/template">
+            {{! Pour chaque état dans le tableau}}
+            {{#records}}
+                {{! Une option dans le select }}
+                {{! le point représente la valeur courante du tableau }}
+                <OPTION VALUE="{{.}}">{{.}}</OPTION>
+            {{/records}}
+        </script>
     </body>
 </html>

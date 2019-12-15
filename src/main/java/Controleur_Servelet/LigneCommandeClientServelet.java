@@ -5,7 +5,8 @@
  */
 package Controleur_Servelet;
 
-import Modele.DAOAdmin;
+import Modele.CommandeEntity;
+import Modele.DAOClient;
 import Modele.DataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author camilleclaret
  */
-@WebServlet(name = "ListDateServlet", urlPatterns = {"/ListDateServlet"})
-public class ListDateServlet extends HttpServlet {
+@WebServlet(name = "LigneCommandeClientServelet", urlPatterns = {"/LigneCommandeClientServelet"})
+public class LigneCommandeClientServelet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,12 +41,21 @@ public class ListDateServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
-        
+        String numeros = request.getParameter("numeros");
+        Cookie ck[]=request.getCookies();
+        String clientCode=ck[0].getValue();
         Properties resultat = new Properties();
         try{
-            resultat.put("records", daoA.dateSelection());// Evite de ne pas avoir deux date valable
-        }catch(SQLException ex){
+            DAOClient daoC = new DAOClient(DataSourceFactory.getDataSource(), clientCode);
+            List<CommandeEntity> com = daoC.getCommande();
+            int idex = 0;
+            while(String.valueOf( com.get(idex).getNum()).equals(numeros) == false){
+                idex++;
+            }
+            int numcommande;
+            
+            resultat.put("records", com.get(idex).getLignes());
+        } catch(SQLException ex){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resultat.put("records", Collections.EMPTY_LIST);
             resultat.put("message", ex.getMessage());
@@ -56,6 +67,7 @@ public class ListDateServlet extends HttpServlet {
            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             out.println(gson.toJson(resultat));
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

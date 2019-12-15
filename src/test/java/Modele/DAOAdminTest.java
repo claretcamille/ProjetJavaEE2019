@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 import org.junit.After;
@@ -87,7 +88,7 @@ public class DAOAdminTest {
         DAOAdmin instance = this.myDAOAdmin;
         instance.suppProduct(reference);
         List<ProductEntity> result = instance.getDAO().allProduct();
-        assertEquals(68, result.size()); // vérif qu'il manque un produit
+       assertEquals(68, result.size()); // vérif qu'il manque un produit
        
     }
    
@@ -153,7 +154,8 @@ public class DAOAdminTest {
         String dateFin = "1994-10-04";
         ChiffreAffEntity expResult = new ChiffreAffEntity("ALFKI", 0F);
         List<ChiffreAffEntity> result = this.myDAOAdmin.chiffreAffClient(dateDebut, dateFin);
-        System.out.println(result.get(0).getChiffre());
+        
+        
         if(expResult.getChiffre() ==  result.get(0).getChiffre()){
             assertEquals(expResult.getInfo(), result.get(0).getInfo()); // Vérif info
             assertEquals(91,result.size()); // Férification de la taille de la liste

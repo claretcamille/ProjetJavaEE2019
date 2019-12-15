@@ -9,8 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -227,6 +229,30 @@ public class DAOAdmin {
         return result;
     }
     
+    public Map<String, Double> chiffreAffPaysMap ( String dateDebut, String dateFin) throws SQLException{
+        String sql ="SELECT PAYS_LIVRAISON, SUM(QUANTITE*PRIX_UNITAIRE) AS PRIX FROM LIGNE"+
+                " INNER JOIN COMMANDE ON LIGNE.COMMANDE = COMMANDE.NUMERO"+
+                " INNER JOIN PRODUIT on LIGNE.PRODUIT = PRODUIT.REFERENCE"+
+                " GROUP BY PAYS_LIVRAISON";
+        
+        Map<String, Double> result = new HashMap<>();
+        
+        try(
+              Connection myConnection = this.myDAOAdmin.getConnection();
+              Statement stmt = myConnection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);
+             
+         ){
+            while (rs.next()) {
+                String name = rs.getString("PAYS_LIVRAISON");
+                double sales = rs.getDouble("PRIX");
+                result.put(name, sales);
+            }
+           } 
+        
+        return result;
+    }
+    
     /**
      * Fonction permettant d'avoir le chiffre d'affaire par client en une période choisie
      * @param dateDebut
@@ -269,6 +295,29 @@ public class DAOAdmin {
         return result;
     }
     
+    public Map<String, Double> chiffreAffClientMap ( String dateDebut, String dateFin) throws SQLException{
+        String sql ="SELECT CLIENT, SUM(QUANTITE*PRIX_UNITAIRE) AS PRIX FROM LIGNE"+
+                " INNER JOIN COMMANDE ON LIGNE.COMMANDE = COMMANDE.NUMERO"+
+                " INNER JOIN PRODUIT on LIGNE.PRODUIT = PRODUIT.REFERENCE"+
+                " GROUP BY CLIENT";
+        
+        Map<String, Double> result = new HashMap<>();
+        
+        try(
+              Connection myConnection = this.myDAOAdmin.getConnection();
+              Statement stmt = myConnection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql);
+             
+         ){
+            while (rs.next()) {
+                String name = rs.getString("CLIENT");
+                double sales = rs.getDouble("PRIX");
+                result.put(name, sales);
+            }
+           } 
+        
+        return result;
+    }
     /**
      * Fonction donnant la liste des dates possible
      * @return liste de date
