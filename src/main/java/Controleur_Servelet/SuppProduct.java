@@ -7,13 +7,9 @@ package Controleur_Servelet;
 
 import Modele.DAOAdmin;
 import Modele.DataSourceFactory;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,10 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author loicleu
+ * @author pedago
  */
-@WebServlet(name = "ListDateSupeServelet", urlPatterns = {"/ListDateSupeServelet"})
-public class ListDateSupeServelet extends HttpServlet {
+@WebServlet(name = "SuppProduct", urlPatterns = {"/SuppProduct"})
+public class SuppProduct extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,32 +35,19 @@ public class ListDateSupeServelet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
-        String dateD = request.getParameter("dateD");
+        String boutonS = request.getParameter("boutonS");
         Properties resultat = new Properties();
         try{
-            List<String> date = daoA.dateSelection();
-            int index = date.indexOf(dateD);
-            int sup = 0;
-            while(sup <= index){
-                date.remove(0);
-                sup++;
-            };
-            resultat.put("records",date);
+            daoA.suppProduct(Integer.parseInt(boutonS));
+            
         }catch(SQLException ex){
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resultat.put("records", Collections.EMPTY_LIST);
-            resultat.put("message", ex.getMessage());
-        }
-        
-        try (PrintWriter out = response.getWriter()) {
-            // On spécifie que la servlet va générer du JSON
-            response.setContentType("application/json;charset=UTF-8");
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            out.println(gson.toJson(resultat));
+            System.err.println(ex.getMessage());
         }
     }
-    
+        
+        
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -69,6 +69,29 @@
                         {
                             alert("Erreur: " + status + " : " + message);
                         }
+                        
+                        function Supression()
+                        {
+                            $("#boutonS").on("click",(function()
+                        {
+                            SuppProduct(value)
+                        });
+                    }
+                    /*}
+                            $.ajax({
+                                url: "SuppProduct",
+                                success: function()
+                                {
+                                    var template = $('#productTemplate').html();
+                                    // On combine le template avec le résultat de la requête
+                                    var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
+                                    // On affiche le résultat dans la page
+                                    $('#product').html(processedTemplate);
+                                },
+                                error: showError
+                            });
+                        });
+                        }*/
         </script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
@@ -99,7 +122,7 @@
                          <TD>{{nom}}</TD>
                          <TD>{{quantite}}</TD> 
                          <TD>{{prix}}</TD>
-                         <TD><a>supprimer</a></TD>
+                         <TD><button id="boutonS" value={{ref}} onClick="Supression()">Supprimer</button></TD>
                      </TR>
                  {{/records}}
               </TABLE>  
