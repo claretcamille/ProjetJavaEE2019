@@ -104,7 +104,7 @@
                         var selectedDateF = document.getElementById("dateF").value;
                         var selectedDateD = document.getElementById("dateD").value;
                         $.ajax({
-                            url: "VenteParPaysServelet?dadeD='"+selectedDateD+"'&dateF='"+selectedDateF+"'",
+                            url: "VenteParPaysServelet?dateD="+selectedDateD+"&dateF="+selectedDateF,
                             dataType: "json",
                             success: // La fonction qui traite les résultats
                             function (result) {
@@ -135,15 +135,15 @@
                         var selectedDateF = document.getElementById("dateF").value;
                         var selectedDateD = document.getElementById("dateD").value;
                         $.ajax({
-                            url: "VenteParCatServlet?dadeD='"+selectedDateD+"'&dateF='"+selectedDateF+"'",
+                            url: "VenteParCatServlet?dateD="+selectedDateD+"&dateF="+selectedDateF,
                             dataType: "json",
                             success: // La fonction qui traite les résultats
                             function (result) {
                                 var chartData = [];
                                 // On met le descriptif des données
-                                chartData.push(["Client", "Ventes"]);
-                                for(var client in result.records) {
-                                    chartData.push([client, result.records[client]]);
+                                chartData.push(["Cat", "Ventes"]);
+                                for(var cat in result.records) {
+                                    chartData.push([cat, result.records[cat]]);
                                 }
                                 // On dessine le graphique
                                 drawChartCat(chartData);
@@ -155,7 +155,7 @@
                     function drawChartCat(dataArray) {
                         var data = google.visualization.arrayToDataTable(dataArray);
                         var options = {
-                            title: 'Ventes par client',
+                            title: 'Ventes par categorie',
                             is3D: false
                         };
                         var chart = new google.visualization.PieChart(document.getElementById('piechartCat'));

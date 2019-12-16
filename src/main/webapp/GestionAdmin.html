@@ -16,6 +16,7 @@
                                     fillCategorySelector();
                                     // Quand on sélectionnne un nouvel état, on affiche les clients de cet état
                                     $("#categorie").change(showProductInCategorie);
+                                    $("#boutonS").change(showProductInCategorie);
 				});
 			
 			function fillCategorySelector()
@@ -62,6 +63,16 @@
                                         error: showError
                                     });				
 			}
+                        function Suppr()
+                        {
+                            // On fait un appel AJAX pour chercher les clients de cet état
+                            $.ajax({
+                                url: "SuppProduct",
+                                dataType: "json",
+                                success: showProductInCategorie(),
+                                error: showError
+                                    });				
+			}
 		
 
                         // Fonction qui traite les erreurs de la requête
@@ -70,28 +81,8 @@
                             alert("Erreur: " + status + " : " + message);
                         }
                         
-                        function Supression()
-                        {
-                            $("#boutonS").on("click",(function()
-                        {
-                            SuppProduct(value)
-                        });
-                    }
-                    /*}
-                            $.ajax({
-                                url: "SuppProduct",
-                                success: function()
-                                {
-                                    var template = $('#productTemplate').html();
-                                    // On combine le template avec le résultat de la requête
-                                    var processedTemplate = Mustache.to_html(template, { categorie: selectedCategorie, records: result.records });
-                                    // On affiche le résultat dans la page
-                                    $('#product').html(processedTemplate);
-                                },
-                                error: showError
-                            });
-                        });
-                        }*/
+                        
+                        
         </script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
@@ -122,7 +113,8 @@
                          <TD>{{nom}}</TD>
                          <TD>{{quantite}}</TD> 
                          <TD>{{prix}}</TD>
-                         <TD><button id="boutonS" value={{ref}} onClick="Supression()">Supprimer</button></TD>
+                         <TD><form    action="SuppProduct" method="POST">
+                          <button name="boutonS" type="submit" value={{ref}}>supprimer</button></form></TD>
                      </TR>
                  {{/records}}
               </TABLE>  

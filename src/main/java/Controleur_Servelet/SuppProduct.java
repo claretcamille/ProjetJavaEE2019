@@ -6,13 +6,18 @@
 package Controleur_Servelet;
 
 import Modele.DAOAdmin;
+import Modele.DAOClient;
 import Modele.DataSourceFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,14 +41,32 @@ public class SuppProduct extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
+        
         String boutonS = request.getParameter("boutonS");
+         Cookie ck[]=request.getCookies();
+        String clientCode=ck[0].getValue();
+        String action = request.getParameter("action");
         Properties resultat = new Properties();
-        try{
-            daoA.suppProduct(Integer.parseInt(boutonS));
+     
             
-        }catch(SQLException ex){
-            System.err.println(ex.getMessage());
+        
+			
+        try{
+            DAOAdmin daoA = new DAOAdmin(DataSourceFactory.getDataSource());
+            if (null != action) {
+                    daoA.suppProduct(Integer.parseInt(boutonS));
+                } 
+        } catch(SQLException ex){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resultat.put("records", Collections.EMPTY_LIST);
+            resultat.put("message", ex.getMessage());
+        }
+        
+        try (PrintWriter out = response.getWriter()) {
+            // On spécifie que la servlet va générer du JSON
+            response.setContentType("application/json;charset=UTF-8");
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            out.println(gson.toJson(resultat));
         }
     }
         

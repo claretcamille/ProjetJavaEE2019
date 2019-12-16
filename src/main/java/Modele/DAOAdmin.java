@@ -173,7 +173,6 @@ public class DAOAdmin {
            ResultSet rs1 = stmt1.executeQuery();
            // Initialisation de la liste avec toute les catégorie
           while(rs1.next()){
-              int cat = rs1.getInt("code");
               stmt2.setString(1, dateDebut);
               stmt2.setString(2, dateFin);
                ResultSet rs2 = stmt2.executeQuery();
