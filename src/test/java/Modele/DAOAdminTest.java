@@ -89,7 +89,6 @@ public class DAOAdminTest {
         instance.suppProduct(reference);
         List<ProductEntity> result = instance.getDAO().allProduct();
        assertEquals(68, result.size()); // vérif qu'il manque un produit
-       
     }
    
     /**
@@ -106,7 +105,6 @@ public class DAOAdminTest {
         ProductEntity expResult = new ProductEntity("1","Chai","1",1,"coca","90.00");
         List<ProductEntity> result = instance.getDAO().allProduct();
         assertEquals(expResult.getQt(), result.get(0).getQt());
-        
     }
     
     /**
@@ -175,7 +173,6 @@ public class DAOAdminTest {
         List<String> result = this.myDAOAdmin.dateSelection();
         assertEquals(expResult, result.get(0));
         assertEquals(480, result.size());
-        
     }
     
     
@@ -196,7 +193,5 @@ public class DAOAdminTest {
         sqlFile.setConnection(connexion);
         sqlFile.execute();
         sqlFile.closeReader();
-    
     }
-    
 }

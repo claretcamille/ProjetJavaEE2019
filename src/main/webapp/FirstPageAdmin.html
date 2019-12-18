@@ -11,6 +11,7 @@
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
                     google.load("visualization", "1", {packages: ["corechart"]});
+                    
                     $(document).ready(// Exécuté à la fin du chargement de la page
                     function () {
                         // On remplit le <select> avec les états existants
@@ -173,27 +174,28 @@
     </head>
     <body>
         <div>
-           <a id="connexion" href="logout">Deconnection</a>
-           <a id="connexion" href="GestionAdmin.html">Produit</a>
+           <a id="connexion" href="logout">Deconnexion</a>
+           <a id="connexion" href="GestionAdmin.html">Produits</a>
             <br>
-            <h1> Affichage des produit disponible : </h1>
-            <h2>Veuillez selectionner par categorie.</h2>
+            <h1> Statistiques : </h1>
+            <h2>Ventes par clients, catégories, produits</h2>
         </div>
         
-   
-            <div id="erreur"></div>
-            <form>
-                <label for="dateD">Choix de la date de début : </label>
-                <select id="dateD"></select>
-            </form>
-            <br>
-            <form>
-                <label for="dateF">Choix de la date de fin : </label>
-                <select id="dateF"></select>
-            </form>
-
-            <!-- Le template qui sert à formatter la liste des clients résultats -->
-            <script id="dateDTemplate" type="text/template">
+        <div id="erreur"></div>
+        <form>
+            <label for="dateD">Choix de la date de début : </label>
+            <select id="dateD"></select>
+        </form>
+        
+        <br>
+        
+        <form>
+            <label for="dateF">Choix de la date de fin : </label>
+            <select id="dateF"></select>
+        </form>
+        
+        <!-- Le template qui sert à formatter la liste des clients résultats -->
+        <script id="dateDTemplate" type="text/template">
             {{! Pour chaque état dans le tableau}}
             {{#records}}
                 {{! Une option dans le select }}
@@ -214,8 +216,5 @@
          <div id="piechartPays" style="width: 900px; height: 500px;"></div>
          </br>
          <div id="piechartCat" style="width: 900px; height: 500px;"></div>
-        
-         
-   
     </body>
 </html>

@@ -43,10 +43,7 @@ public class ListeInfoClientServelet extends HttpServlet {
         String clientCode=ck[0].getValue();
         String action = request.getParameter("action");
         Properties resultat = new Properties();
-     
-            
         
-			
         try{
             DAOClient daoC = new DAOClient(DataSourceFactory.getDataSource(), clientCode);
             resultat.put("records", daoC.getClient());
@@ -139,7 +136,4 @@ public class ListeInfoClientServelet extends HttpServlet {
            daoC.modifInfoClient(val[i], valSaisie[i]);
        }
     }
-
-   
-
 }

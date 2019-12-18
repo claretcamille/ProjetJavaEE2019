@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  */
 public class DAOClientTest {
     
-   private DAO myDAO;
+    private DAO myDAO;
     private DAOClient myDAOClient; // L'objet à tester
     private javax.sql.DataSource myDataSource; // La source de données à utiliser
     private  Connection myConnection ; // La connection à la BD de test
@@ -95,7 +95,6 @@ public class DAOClientTest {
         assertEquals(expResult.getNum(),result.get(0).getNum());
         assertEquals(expResult.getPort(),result.get(0).getPort());
         assertEquals(expResult.getSaisieLe(),result.get(0).getSaisieLe());
-        
     }
 
     /**
@@ -218,7 +217,5 @@ public class DAOClientTest {
         sqlFile.setConnection(connexion);
         sqlFile.execute();
         sqlFile.closeReader();
-    
     }
-    
 }

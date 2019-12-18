@@ -52,7 +52,6 @@ public class DAOTest {
     public void tearDown() throws SQLException {
         
        this.myConnection.close(); // Fermeture de la connection
-        
     }
 
     /**
@@ -80,7 +79,6 @@ public class DAOTest {
         assertEquals(expResult.getFourni(), result.get(0).getFourni());
         assertEquals(expResult.getQt(), result.get(0).getQt());
         assertEquals(expResult.getRef(), result.get(0).getRef());
-        
     }
     
      /**
@@ -96,7 +94,6 @@ public class DAOTest {
         // Deuxieme test on vérifie les données du premier produit
        assertEquals(expResult.getLibelle(), result.get(0).getLibelle());
        assertEquals(expResult.getCode(), result.get(0).getCode());
-    
     }
 
     /**
@@ -145,7 +142,6 @@ public class DAOTest {
         System.out.println("getClient");
         List<ClientEntity> result = this.myDAO.getClient();
         assertEquals(91, result.size());
-        
     }
     
     /**
@@ -158,7 +154,6 @@ public class DAOTest {
         List<ProductEntity> result2 = this.myDAO.categoryProduct("Boissons");
         assertEquals(12, result1.size());
         assertEquals(result2.size(), result1.size());
-        
     }
     
     public static javax.sql.DataSource getTestDataSource() {
@@ -178,7 +173,5 @@ public class DAOTest {
         sqlFile.setConnection(connexion);
         sqlFile.execute();
         sqlFile.closeReader();
-    
     }
-    
 }
