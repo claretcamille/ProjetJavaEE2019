@@ -13,6 +13,8 @@ public class LigneEntity {
     private int commande ;
     private int product;
     private int quantite;
+    private float prix;
+    
     
     public LigneEntity( int refProd, int qt){
         this.product = refProd;

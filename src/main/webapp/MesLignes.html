@@ -1,85 +1,89 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Mes Commandes</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <!-- On charge la bibliothèque JQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <!-- On charge le moteur de template mustache https://mustache.github.io/ -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
-        <script>
+	<head>
+		<title>Mes Commandes</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- On charge la bibliothèque JQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<!-- On charge le moteur de template mustache https://mustache.github.io/ -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
+		<script>
 			$(document).ready(// Exécuté à la fin du chargement de la page
 				function () {
-                                    $("#numeros").change(showCommands);
-                                }
-                                        );
+                                                                                                             fillComandeSelector();
+					$("#numeros").change(showCommands);
+				}
+			);
                 
-                        function fillComandeSelector() {
-                            // On fait un appel AJAX pour chercher les états existants
-                            $.ajax({
-                                url: "NumCommandeClientServelet",
-                                dataType: "json",
-                                error: showError,
-                                success: 
-                                        // La fonction qui traite les résultats
-					function(result) {
-                                            var template = $('#numerosTemplate').html();
-                                            // On combine le template avec le résultat de la requête
-                                            var processedTemplate = Mustache.to_html(template, result);
-                                            // On affiche la liste des options dans le select
-                                            $('#numeros').html(processedTemplate);
-                                            // On initialise l'affichage des clients
-                                        }
-                                    });
-                                }
+                                                                 function fillComandeSelector() {
+				// On fait un appel AJAX pour chercher les états existants
+				$.ajax({
+					url: "NumCommandeClientServelet",
+					dataType: "json",
+					error: showError,
+					success: // La fonction qui traite les résultats
+						function(result) {
+                                                                                                                                                           // Le code source du template est dans la page
+							var template = $('#numerosTemplate').html();
+							// On combine le template avec le résultat de la requête
+							var processedTemplate = Mustache.to_html(template, result);
+							// On affiche la liste des options dans le select
+							$('#numeros').html(processedTemplate);	
+							// On initialise l'affichage des clients
+                                                                                                                                                         showCommands();
+						}
+				});								
+			}
 		
 			// Afficher les clients dans l'état sélectionné
 			function showCommands() {
-                            var selectedNum = $("#numeros").val();
-                            // On fait un appel AJAX pour chercher les clients de cet état
-                            $.ajax({
-                                url: "LigneCommandeClientServelet",
-                                dataType: "json",
-                                success:
-                                        // La fonction qui traite les résultats
-					function(result) {
-                                            // Le code source du template est dans la page
-                                            var template = $('#commandesTemplate').html();
-                                            // On combine le template avec le résultat de la requête
-                                            var processedTemplate = Mustache.to_html(template, { numeros: selectedNum, records: result.records });
-                                            // On affiche le résultat dans la page
-                                            $('#commandes').html(processedTemplate);
-                                        },
-                                error: showError
-                            });
-                        }
+                                                                                        var selectedNum = $("#numeros").val();
+				// On fait un appel AJAX pour chercher les clients de cet état
+				$.ajax({
+					url: "LigneCommandeClientServelet",
+					dataType: "json",
+                                                                                                             data: { "numeros" : selectedNum },
+					success: // La fonction qui traite les résultats
+						function(result) {
+							// Le code source du template est dans la page
+							var template = $('#commandesTemplate').html();
+							// On combine le template avec le résultat de la requête
+							var processedTemplate = Mustache.to_html(template, { numeros: selectedNum, records: result.records });
+							// On affiche le résultat dans la page
+							$('#commandes').html(processedTemplate);	
+						},
+					error: showError
+				});				
+			}
                                                                  
 
-                        // Fonction qui traite les erreurs de la requête
-                        function showError(xhr, status, message) {
-                            alert("Erreur: " + status + " : " + message);
-                        }
+		// Fonction qui traite les erreurs de la requête
+		function showError(xhr, status, message) {
+			alert("Erreur: " + status + " : " + message);
+		}
         </script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
         <div>
-            <a id="connexion" href="logout">Deconnexion</a>
+            <a id="connexion" href="logout">Deconnection</a>
             <a id="connexion" href="MesCommandes.html">Commandes</a>
             <a id="connexion" href="FirstPageClient.html">Page Acceuil</a>
             <a id="connexion" href="MesInfos.html">Mes Infos</a>
             <br>
-            <h1> Détails des commandes : </h1>
-            <h2>Veuillez selectionner numéro de commande.</h2>
+            <h1> Affichage des produit disponible : </h1>
+            <h2>Veuillez selectionner par categorie.</h2>
             
         </div>
         
         <form>
-                <label for="numeros"> Choix du numéro de commande </label>
+                <label for="numeros"> Choix du Numérode de Commande </label>
                 <select id="numeros"></select>
             </form>
             <br>
-            
+        
+        
+
             <!-- La zone où les résultats vont s'afficher -->
             <div id="commandes"></div>
             <!-- Le template qui sert à formatter la liste des clients résultats-->
@@ -106,5 +110,8 @@
                 <OPTION VALUE="{{.}}">{{.}}</OPTION>
             {{/records}}
         </script>
+            
+       
+   
     </body>
 </html>
